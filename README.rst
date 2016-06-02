@@ -21,9 +21,8 @@ be implemented in a pluggable loader which can be registered via an entrypoint.
 Usage
 =====
 
-Applications should use ``plaster`` to load settings from named sections. A
-special default section may be loaded by using the sentinel
-``plaster.DEFAULT_SECTION``.
+Applications should use ``plaster`` to load settings from named sections in
+a configuration source (usually a file).
 
 Most applications will want to use
 ``plaster.get_settings(uri, section=None, defaults=None)`` to load the settings

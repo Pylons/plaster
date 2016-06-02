@@ -1,3 +1,5 @@
+from .exceptions import NoSectionError
+
 def get_settings(config_uri, section=None, defaults=None):
     """
     Load the settings from a named section.
@@ -5,18 +7,20 @@ def get_settings(config_uri, section=None, defaults=None):
     .. code-block:: python
 
         settings = plaster.get_settings(...)
-        print settings['foo']
+        print(settings['foo'])
 
-    If ``section`` is not ``None`` then it will be used. Otherwise, the
-    ``section`` will be populated by the fragment defined in the
-    ``config_uri#section`` syntax. Finally, if no ``section`` can be
-    determined then a ``ValueError`` will be raised.
+    If ``name`` is not ``None`` then it will be used. Otherwise, the ``name``
+    will be populated by the fragment defined in the ``config_uri#name``
+    syntax. If ``name`` is still ``None`` then a
+    :class:`plaster.exceptions.NoSectionError` error will be raised.
 
     Any values in ``defaults`` may be overridden by the loader prior to
     returning the final configuration dictionary.
 
     """
     config_uri, section = parse_uri(config_uri, section)
+    if section is None:
+        raise NoSectionError
     loader = get_loader(config_uri)
     return loader.get_settings(section, defaults)
 
@@ -31,8 +35,10 @@ def get_wsgi_app(config_uri, name=None, defaults=None):
 
     If ``name`` is not ``None`` then it will be used. Otherwise, the ``name``
     will be populated by the fragment defined in the ``config_uri#name``
-    syntax. Finally, if no ``name`` can be determined then a ``ValueError``
-    will be raised.
+    syntax. If ``name`` is still undefined it will be left to the underlying
+    :class:`plaster.interfaces.Loader` to determine if it will load from a
+    default location or will raise a
+    :class:`plaster.exceptions.NoSectionError`.
 
     Any values in ``defaults`` may be overridden by the loader prior to
     returning the final configuration dictionary.
@@ -53,10 +59,12 @@ def get_wsgi_server(config_uri, name=None, defaults=None):
         app = plaster.get_wsgi_app(...)
         server(app)
 
-    If ``name`` is not ``None`` then it will be used. Otherwise, the
-    ``name`` will be populated by the fragment defined in the
-    ``config_uri#name`` syntax. Finally, if no ``name`` can be determined
-    then a ``ValueError`` will be raised.
+    If ``name`` is not ``None`` then it will be used. Otherwise, the ``name``
+    will be populated by the fragment defined in the ``config_uri#name``
+    syntax. If ``name`` is still undefined it will be left to the underlying
+    :class:`plaster.interfaces.Loader` to determine if it will load from a
+    default location or will raise a
+    :class:`plaster.exceptions.NoSectionError`.
 
     Any values in ``defaults`` may be overridden by the loader prior to
     returning the final configuration dictionary.
@@ -79,8 +87,10 @@ def get_wsgi_filter(config_uri, name=None, defaults=None):
 
     If ``name`` is not ``None`` then it will be used. Otherwise, the ``name``
     will be populated by the fragment defined in the ``config_uri#name``
-    syntax. Finally, if no ``name`` can be determined then a ``ValueError``
-    will be raised.
+    syntax. If ``name`` is still undefined it will be left to the underlying
+    :class:`plaster.interfaces.Loader` to determine if it will load from a
+    default location or will raise a
+    :class:`plaster.exceptions.NoSectionError`.
 
     Any values in ``defaults`` may be overridden by the loader prior to
     returning the final configuration dictionary.
@@ -90,7 +100,7 @@ def get_wsgi_filter(config_uri, name=None, defaults=None):
     loader = get_loader(config_uri)
     return loader.get_wsgi_filter(name, defaults)
 
-def setup_logging(config_uri, defaults=None):
+def setup_logging(config_uri, name=None, defaults=None):
     """
     Execute the logging configuration defined in the config file.
 
@@ -103,15 +113,6 @@ def setup_logging(config_uri, defaults=None):
     loader = get_loader(config_uri)
     return loader.setup_logging(defaults)
 
-class _Sentinel(object):
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Sentinel({0.name})>'.format(self)
-
-DEFAULT_SECTION = _Sentinel('DEFAULT_SECTION')
-
 def parse_uri(config_uri, section=None):
     path, name = config_uri, None
     if '#' in config_uri:
@@ -121,4 +122,7 @@ def parse_uri(config_uri, section=None):
     return path, name
 
 def get_loader(config_uri):
-    """ Find a loader capable of handling ``config_uri``."""
+    """
+    Find a loader capable of handling ``config_uri``.
+
+    """

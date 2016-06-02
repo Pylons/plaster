@@ -12,6 +12,8 @@ class Loader(object):
         """
         Load the settings for the named ``section``.
 
+        The ``section`` should never be ``None``.
+
         Any values in ``defaults`` may be overridden prior to returning
         the final configuration dictionary.
 
@@ -21,6 +23,10 @@ class Loader(object):
     def get_wsgi_app(self, name, defaults=None):
         """
         Load a WSGI application.
+
+        If ``name`` is ``None`` then the loader should either use a default
+        section name for the component such as ``main`` or raise a
+        :class:`plaster.exceptions.NoSectionError`.
 
         Any values in ``defaults`` may be overridden by the loader prior to
         returning the final configuration dictionary.
@@ -39,10 +45,9 @@ class Loader(object):
             app = plaster.get_wsgi_app(...)
             server(app)
 
-        If ``section`` is not ``None`` then it will be used. Otherwise, the
-        ``section`` will be populated by the fragment defined in the
-        ``config_uri#section`` syntax. Finally, if no ``section`` can be
-        determined then a ``ValueError`` will be raised.
+        If ``name`` is ``None`` then the loader should either use a default
+        section name for the component such as ``main`` or raise a
+        :class:`plaster.exceptions.NoSectionError`.
 
         Any values in ``defaults`` may be overridden by the loader prior to
         returning the final configuration dictionary.
@@ -54,6 +59,10 @@ class Loader(object):
         """
         Load a WSGI filter that accepts a WSGI application and returns a new
         WSGI application.
+
+        If ``name`` is ``None`` then the loader should either use a default
+        section name for the component such as ``main`` or raise a
+        :class:`plaster.exceptions.NoSectionError`.
 
         Any values in ``defaults`` may be overridden by the loader prior to
         returning the final configuration dictionary.
