@@ -4,8 +4,20 @@ from .compat import add_metaclass
 
 @add_metaclass(abc.ABCMeta)
 class Loader(object):
-    def __init__(self, uri):
-        self.uri = uri
+    """
+    A ``Loader`` is instantiated with a path and options parsed from the
+    original ``config_uri``.
+
+    It is required to implement ``get_settings`` and ``setup_logging``.
+
+    Optionally it may also provide other loader-specific functionality such
+    as ``get_wsgi_app`` and ``get_wsgi_server`` for loading WSGI
+    configurations.
+
+    """
+    def __init__(self, path, **kw):
+        self.path = path
+        self.options = kw
 
     @abc.abstractmethod
     def get_settings(self, section, defaults=None):
@@ -16,56 +28,6 @@ class Loader(object):
 
         Any values in ``defaults`` may be overridden prior to returning
         the final configuration dictionary.
-
-        """
-
-    @abc.abstractmethod
-    def get_wsgi_app(self, name, defaults=None):
-        """
-        Load a WSGI application.
-
-        If ``name`` is ``None`` then the loader should either use a default
-        section name for the component such as ``main`` or raise a
-        :class:`plaster.exceptions.NoSectionError`.
-
-        Any values in ``defaults`` may be overridden by the loader prior to
-        returning the final configuration dictionary.
-
-        """
-
-    @abc.abstractmethod
-    def get_wsgi_server(self, name, defaults=None):
-        """
-        Load a server factory that accepts a WSGI application to serve forever.
-
-        .. code-block:: python
-
-            plaster.setup_logging(...)
-            server = plaster.get_wsgi_server(...)
-            app = plaster.get_wsgi_app(...)
-            server(app)
-
-        If ``name`` is ``None`` then the loader should either use a default
-        section name for the component such as ``main`` or raise a
-        :class:`plaster.exceptions.NoSectionError`.
-
-        Any values in ``defaults`` may be overridden by the loader prior to
-        returning the final configuration dictionary.
-
-        """
-
-    @abc.abstractmethod
-    def get_wsgi_filter(self, name, defaults=None):
-        """
-        Load a WSGI filter that accepts a WSGI application and returns a new
-        WSGI application.
-
-        If ``name`` is ``None`` then the loader should either use a default
-        section name for the component such as ``main`` or raise a
-        :class:`plaster.exceptions.NoSectionError`.
-
-        Any values in ``defaults`` may be overridden by the loader prior to
-        returning the final configuration dictionary.
 
         """
 
