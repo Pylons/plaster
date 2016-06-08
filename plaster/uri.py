@@ -1,7 +1,7 @@
 import os.path
 
 from .compat import urlparse
-from .exceptions import InvalidLoaderURI
+from .exceptions import InvalidURI
 
 
 class PlasterURL(object):
@@ -78,8 +78,8 @@ def parse_uri(config_uri):
             scheme = scheme[1:]
 
     if not scheme:
-        raise InvalidLoaderURI('Could not determine the loader scheme for '
-                               'the supplied "config_uri".')
+        raise InvalidURI('Could not determine the loader scheme for '
+                         'the supplied "config_uri".')
 
     return PlasterURL(
         scheme=scheme,

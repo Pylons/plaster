@@ -5,9 +5,9 @@ class NoSectionError(Exception):
         Exception.__init__(self, message)
         self.message = message
 
-class InvalidLoaderURI(Exception):
+class InvalidURI(Exception):
     def __init__(self, message=None):
         if message is None:
-            message = 'Unable to parse supplied "config_uri".'
+            message = 'Unable to parse "config_uri".'
         Exception.__init__(self, message)
         self.message = message

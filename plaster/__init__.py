@@ -1,6 +1,6 @@
 from .exceptions import (
     NoSectionError,
-    InvalidLoaderURI,
+    InvalidURI,
 )
 from .loaders import (
     get_loader,
