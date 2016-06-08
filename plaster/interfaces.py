@@ -8,7 +8,8 @@ class Loader(object):
     A ``Loader`` is instantiated with a path and options parsed from the
     original ``config_uri``.
 
-    It is required to implement ``get_settings`` and ``setup_logging``.
+    It is required to implement ``get_sections``, ``get_settings`` and
+    ``setup_logging``.
 
     Optionally it may also provide other loader-specific functionality such
     as ``get_wsgi_app`` and ``get_wsgi_server`` for loading WSGI
@@ -20,11 +21,19 @@ class Loader(object):
         self.options = kw
 
     @abc.abstractmethod
+    def get_sections(self):
+        """
+        Load the list of section names available.
+
+        """
+
+    @abc.abstractmethod
     def get_settings(self, section, defaults=None):
         """
         Load the settings for the named ``section``.
 
-        The ``section`` should never be ``None``.
+        If the specified ``section`` does not exist a
+        :class:`plaster.exceptions.NoSectionError` should be raised.
 
         Any values in ``defaults`` may be overridden prior to returning
         the final configuration dictionary.
