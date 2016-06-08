@@ -35,3 +35,10 @@ itself via the ``uri#section`` syntax but it will be overridden by any explicit
     import plaster
 
     settings = plaster.get_settings('development.ini#main')
+
+Acknowledgments
+===============
+
+This API is heavily inspired by conversations, contributions, and design put
+forth in https://github.com/inklesspen/montague and
+https://metaclassical.com/announcing-montague-the-new-way-to-configure-python-applications/.
