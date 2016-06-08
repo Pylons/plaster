@@ -1,3 +1,8 @@
+import sys
+
+PY2 = sys.version_info[0] == 2
+
+
 def add_metaclass(metaclass):
     """Class decorator for creating a class with a metaclass."""
     def wrapper(cls):
@@ -12,3 +17,10 @@ def add_metaclass(metaclass):
         orig_vars.pop('__weakref__', None)
         return metaclass(cls.__name__, cls.__bases__, orig_vars)
     return wrapper
+
+
+if PY2:
+    import urlparse
+else:
+    from urllib import parse
+    urlparse = parse

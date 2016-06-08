@@ -6,7 +6,9 @@ with open('README.rst') as fp:
 with open('CHANGES.rst') as fp:
     changes = fp.read()
 
-requires = []
+requires = [
+    'setuptools', # for pkg_resources
+]
 
 docs_require = [
     'Sphinx',
