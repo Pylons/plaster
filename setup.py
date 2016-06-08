@@ -1,19 +1,26 @@
 from setuptools import setup, find_packages
+import os
 
-with open('README.rst') as fp:
-    readme = fp.read()
-
-with open('CHANGES.rst') as fp:
-    changes = fp.read()
+here = os.path.abspath(os.path.dirname(__file__))
+try:
+    with open(os.path.join(here, 'README.rst')) as f:
+        readme = f.read()
+    with open(os.path.join(here, 'CHANGES.txt')) as f:
+        CHANGES = f.read()
+except IOError:
+    readme = changes = ''
 
 requires = []
 
 docs_require = [
     'Sphinx',
+    'pylons-sphinx-themes',
 ]
 
 tests_require = [
-    'pytest',
+    'nose',
+    'nose-exclude',
+    'coverage',
 ]
 
 setup(
