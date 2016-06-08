@@ -1,0 +1,8 @@
+setup.py
+DefaultApp.egg-info/PKG-INFO
+DefaultApp.egg-info/SOURCES.txt
+DefaultApp.egg-info/dependency_links.txt
+DefaultApp.egg-info/entry_points.txt
+DefaultApp.egg-info/top_level.txt
+defaultapp/__init__.py
+defaultapp/loaders.py
