@@ -2,6 +2,7 @@ import abc
 
 from .compat import add_metaclass
 
+
 @add_metaclass(abc.ABCMeta)
 class Loader(object):
     """
@@ -16,6 +17,7 @@ class Loader(object):
     configurations.
 
     """
+
     def __init__(self, path, **kw):
         self.path = path
         self.options = kw
