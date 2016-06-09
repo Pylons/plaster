@@ -1,6 +1,9 @@
+# public api
+
 from .exceptions import (
     InvalidURI,
     LoaderNotFound,
+    MultipleLoadersFound,
     NoSectionError,
 )
 from .loaders import (

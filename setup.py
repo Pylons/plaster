@@ -20,9 +20,8 @@ docs_require = [
 ]
 
 tests_require = [
-    'nose',
-    'nose-exclude',
-    'coverage',
+    'pytest',
+    'pytest-cov',
 ]
 
 setup(

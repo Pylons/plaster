@@ -1,9 +1,0 @@
-[plaster.loader]
-        ini=defaultapp.loaders:INILoader
-        ini+other=defaultapp.loaders:INIOtherLoader
-        yaml=defaultapp.loaders:YAMLLoader
-        yaml+other=defaultapp.loaders:YAMLOtherLoader
-        bad=defaultapp.loaders:BadLoader
-
-[other.loader]
-        ini=defaultapp.loaders:WontBeLoaded

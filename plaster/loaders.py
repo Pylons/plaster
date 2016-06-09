@@ -1,8 +1,8 @@
 import pkg_resources
-import warnings
 
 from .exceptions import (
     LoaderNotFound,
+    MultipleLoadersFound,
     NoSectionError,
 )
 from .uri import parse_uri
@@ -66,7 +66,7 @@ def setup_logging(config_uri, defaults=None):
     return loader.setup_logging(defaults)
 
 
-def get_loader(config_uri):
+def get_loader(config_uri, _working_set=pkg_resources.working_set):
     """
     Find a :class:`plaster.interfaces.Loader` object capable of handling
     ``config_uri``.
@@ -79,7 +79,7 @@ def get_loader(config_uri):
     requested_scheme = config_uri.scheme
 
     matched_loaders = []
-    for loader in pkg_resources.iter_entry_points(group='plaster.loader'):
+    for loader in _working_set.iter_entry_points(group='plaster.loader'):
         if requested_scheme == loader.name:
             matched_loaders.append(loader)
 
@@ -88,13 +88,11 @@ def get_loader(config_uri):
             if ext == requested_scheme:
                 matched_loaders.append(loader)
 
-    if len(matched_loaders) > 1:
-        warnings.warn(
-            'Multiple loaders found supporting this scheme. Using the '
-            'first.')
-
     if len(matched_loaders) < 1:
         raise LoaderNotFound
+
+    if len(matched_loaders) > 1:
+        raise MultipleLoadersFound(requested_scheme, matched_loaders)
 
     loader_ep = matched_loaders[0]
     loader_factory = loader_ep.load()

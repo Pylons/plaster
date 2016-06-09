@@ -45,7 +45,8 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/mmerickel/plaster/issues.
+The best way to send feedback is to file an issue at
+https://github.com/mmerickel/plaster/issues.
 
 If you are proposing a feature:
 
@@ -64,10 +65,11 @@ Ready to contribute? Here's how to set up `plaster` for local development.
 
     $ git clone git@github.com:your_name_here/plaster.git
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+3. Install your local copy into a virtualenv::
 
     $ python3 -m venv env
     $ env/bin/pip install -e .[docs,testing]
+    $ env/bin/pip install tox
 
 4. Create a branch for local development::
 
@@ -75,13 +77,10 @@ Ready to contribute? Here's how to set up `plaster` for local development.
 
    Now you can make your changes locally.
 
-5. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
+5. When you're done making changes, check that your changes pass flake8 and
+   the tests, including testing other Python versions with tox::
 
-    $ env/bin/flake8 plaster tests
-    $ python setup.py test or py.test
-    $ tox
-
-   To get flake8 and tox, just pip install them into your virtualenv.
+    $ env/bin/tox
 
 6. Commit your changes and push your branch to GitHub::
 
@@ -109,4 +108,4 @@ Tips
 
 To run a subset of tests::
 
-$ py.test tests.test_plaster
+$ env/bin/py.test tests.test_plaster

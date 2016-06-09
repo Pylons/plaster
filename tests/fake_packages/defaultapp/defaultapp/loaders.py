@@ -4,6 +4,9 @@ class LoaderBase(object):
     def __init__(self, uri):
         self.uri = uri
 
+    def get_sections(self):
+        return ['a', 'b']
+
     def get_settings(self, *args, **kwargs):
         return self.entry_point_key
 
@@ -11,20 +14,20 @@ class LoaderBase(object):
         return self.entry_point_key
 
 
+class ConfLoader(LoaderBase):
+    entry_point_key = 'conf'
+
+
 class INILoader(LoaderBase):
-    entry_point_key = 'ini'
+    entry_point_key = 'ini+foo'
 
 
-class INIOtherLoader(LoaderBase):
-    entry_point_key = 'ini+other'
+class YAMLFooLoader(LoaderBase):
+    entry_point_key = 'yaml+foo'
 
 
-class YAMLLoader(LoaderBase):
-    entry_point_key = 'yaml'
-
-
-class YAMLOtherLoader(LoaderBase):
-    entry_point_key = 'yaml+other'
+class YAMLBarLoader(LoaderBase):
+    entry_point_key = 'yaml+bar'
 
 
 class BadLoader(object):
