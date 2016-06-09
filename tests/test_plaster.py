@@ -34,4 +34,5 @@ class TestGetLoader(unittest.TestCase):
     def test_other_groups(self):
         config_uri = 'other-scheme://development.ini'
 
-        self.assertRaises(plaster.NoLoaderFound, plaster.get_loader, config_uri)
+        self.assertRaises(plaster.LoaderNotFound,
+                          lambda: plaster.get_loader(config_uri))

@@ -14,7 +14,7 @@ class InvalidURI(ValueError):
         self.message = message
 
 
-class NoLoaderFound(ValueError):
+class LoaderNotFound(ValueError):
     def __init__(self, message=None):
         if message is None:
             message = 'Could not find a matching loader for the "config_uri".'

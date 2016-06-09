@@ -1,7 +1,7 @@
 from .exceptions import (
-    NoLoaderFound,
-    NoSectionError,
     InvalidURI,
+    LoaderNotFound,
+    NoSectionError,
 )
 from .loaders import (
     get_loader,

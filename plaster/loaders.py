@@ -2,7 +2,7 @@ import pkg_resources
 import warnings
 
 from .exceptions import (
-    NoLoaderFound,
+    LoaderNotFound,
     NoSectionError,
 )
 from .uri import parse_uri
@@ -76,49 +76,27 @@ def get_loader(config_uri):
 
     """
     config_uri = parse_uri(config_uri)
+    requested_scheme = config_uri.scheme
 
-    scheme_prefix, scheme_suffix = _split_scheme(config_uri.scheme)
-
-    prefix_loaders = []
-    suffix_loaders = []
-
+    matched_loaders = []
     for loader in pkg_resources.iter_entry_points(group='plaster.loader'):
-        prefix, suffix = _split_scheme(loader.name)
+        if requested_scheme == loader.name:
+            matched_loaders.append(loader)
 
-        if scheme_prefix != prefix:
-            continue
-        elif scheme_suffix is None and suffix is None:
-            prefix_loaders.append(loader)
-        elif suffix is not None:
-            suffix_loaders.append(loader)
+        elif '+' in loader.name:
+            ext, _ = loader.name.split('+', 1)
+            if ext == requested_scheme:
+                matched_loaders.append(loader)
 
-    source = None
-
-    if prefix_loaders and scheme_suffix is None:
-        source = prefix_loaders
-
-    elif suffix_loaders and scheme_suffix is not None:
-        source = suffix_loaders
-
-    elif not (prefix_loaders and not suffix_loaders) or source is None:
-        raise NoLoaderFound
-
-    if len(source) > 1:
+    if len(matched_loaders) > 1:
         warnings.warn(
             'Multiple loaders found supporting this scheme. Using the '
             'first.')
 
-    loader_factory = source[0].load()
+    if len(matched_loaders) < 1:
+        raise LoaderNotFound
+
+    loader_ep = matched_loaders[0]
+    loader_factory = loader_ep.load()
     loader = loader_factory(config_uri)
     return loader
-
-
-def _split_scheme(scheme):
-    if '+' in scheme:
-        prefix, suffix = scheme.split('+', 1)
-
-    else:
-        prefix = scheme
-        suffix = None
-
-    return prefix, suffix
