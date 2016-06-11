@@ -43,7 +43,7 @@ setup(
     zip_safe=False,
     keywords='plaster pastedeploy ini config',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         "Programming Language :: Python :: 2",
