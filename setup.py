@@ -28,9 +28,9 @@ tests_require = [
 setup(
     name='plaster',
     version='0.1.0',
-    description="A loader interface around multiple config file formats.",
+    description='A loader interface around multiple config file formats.',
     long_description=readme + '\n\n' + changes,
-    author="Michael Merickel",
+    author='Michael Merickel',
     author_email='michael@merickel.org',
     url='https://github.com/mmerickel/plaster',
     packages=find_packages(exclude=['tests']),
@@ -40,6 +40,7 @@ setup(
         'docs': docs_require,
         'testing': tests_require,
     },
+    test_suite='tests',
     zip_safe=False,
     keywords='plaster pastedeploy ini config',
     classifiers=[
@@ -47,7 +48,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
