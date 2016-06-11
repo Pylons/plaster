@@ -1,3 +1,5 @@
+import pytest
+
 class TestURL(object):
     def _callFUT(self, uri):
         from plaster.uri import parse_uri
@@ -32,3 +34,21 @@ class TestURL(object):
         assert uri.scheme == 'ini+pastedeploy'
         assert uri.path == 'development.ini'
         assert uri.fragment is None
+
+    def test_missing_scheme(self):
+        from plaster.exceptions import InvalidURI
+        with pytest.raises(InvalidURI):
+            self._callFUT('foo')
+
+    def test___str__(self):
+        uri = self._callFUT('development.ini')
+        assert str(uri) == 'ini://development.ini'
+
+    def test___str___with_fragment(self):
+        uri = self._callFUT('development.ini#main')
+        assert str(uri) == 'ini://development.ini#main'
+
+    def test_returns_same_instance(self):
+        uri1 = self._callFUT('development.ini')
+        uri2 = self._callFUT(uri1)
+        assert uri1 is uri2

@@ -6,6 +6,9 @@ from .exceptions import (
     MultipleLoadersFound,
     NoSectionError,
 )
+from .interfaces import (
+    Loader,
+)
 from .loaders import (
     get_loader,
     get_sections,

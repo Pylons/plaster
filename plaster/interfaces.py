@@ -6,21 +6,20 @@ from .compat import add_metaclass
 @add_metaclass(abc.ABCMeta)
 class Loader(object):
     """
-    A ``Loader`` is instantiated with a path and options parsed from the
-    original ``config_uri``.
+    A ``Loader`` is instantiated with a :class:`plaster.uri.PlasterURL`.
 
     It is required to implement ``get_sections``, ``get_settings`` and
     ``setup_logging``.
 
     Optionally it may also provide other loader-specific functionality such
     as ``get_wsgi_app`` and ``get_wsgi_server`` for loading WSGI
-    configurations.
+    configurations. Services that depend on such functionality should document
+    this so that it is easy to create custom loaders.
 
     """
 
-    def __init__(self, path, **kw):
-        self.path = path
-        self.options = kw
+    def __init__(self, uri):
+        self.uri = uri
 
     @abc.abstractmethod
     def get_sections(self):
@@ -30,12 +29,14 @@ class Loader(object):
         """
 
     @abc.abstractmethod
-    def get_settings(self, section, defaults=None):
+    def get_settings(self, section=None, defaults=None):
         """
         Load the settings for the named ``section``.
 
-        If the specified ``section`` does not exist a
-        :class:`plaster.exceptions.NoSectionError` should be raised.
+        If ``section`` is not ``None`` then it will be used. Otherwise, the
+        ``section`` may be populated by the fragment defined in the
+        ``config_uri#fragment`` syntax. If ``section`` is still ``None`` then
+        a :class:`plaster.exceptions.NoSectionError` error should be raised.
 
         Any values in ``defaults`` may be overridden prior to returning
         the final configuration dictionary.

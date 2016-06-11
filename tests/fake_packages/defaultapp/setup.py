@@ -10,7 +10,8 @@ setup(
             'ini+foo=defaultapp.loaders:INILoader',
             'yaml+foo=defaultapp.loaders:YAMLFooLoader',
             'yaml+bar=defaultapp.loaders:YAMLBarLoader',
-            'bad=defaultapp.loaders.BadLoader',
+            'bad=defaultapp.loaders:BadLoader',
+            'broken=defaultapp.loaders.BadLoader',
         ],
         'other.loader': [
             'ini=defaultapp.loaders:WontBeLoaded',

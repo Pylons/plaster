@@ -1,17 +1,37 @@
-class LoaderBase(object):
+import plaster
+
+_SECTIONS = {
+    'a': {
+        'foo': 'bar',
+    },
+    'b': {
+        'baz': 'xyz',
+    },
+}
+
+
+class LoaderBase(plaster.Loader):
     entry_point_key = None
 
-    def __init__(self, uri):
-        self.uri = uri
-
     def get_sections(self):
-        return ['a', 'b']
+        return list(_SECTIONS.keys())
 
-    def get_settings(self, *args, **kwargs):
-        return self.entry_point_key
+    def get_settings(self, section=None, defaults=None):
+        if section is None:
+            section = self.uri.fragment
+        if defaults is not None:
+            result = defaults.copy()
+        else:
+            result = {}
+        try:
+            result.update(_SECTIONS[section])
+        except KeyError:
+            raise plaster.NoSectionError
+        return result
 
-    def setup_logging(self):
-        return self.entry_point_key
+    def setup_logging(self, defaults=None):
+        self.logging_setup = True
+        self.logging_defaults = defaults
 
 
 class ConfLoader(LoaderBase):

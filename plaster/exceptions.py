@@ -1,7 +1,7 @@
 class NoSectionError(ValueError):
     def __init__(self, message=None):
         if message is None:
-            message = 'A section name is required.'
+            message = 'Could not find requested section.'
         Exception.__init__(self, message)
         self.message = message
 
@@ -28,7 +28,7 @@ class MultipleLoadersFound(ValueError):
         self.loaders = loaders
         if message is None:
             message = (
-                'Multiple plaster loaders were found for scheme={0}. '
+                'Multiple plaster loaders were found for scheme="{0}". '
                 'Please specify a more specific "config_uri".'
             ).format(self.scheme)
         Exception.__init__(self, message)

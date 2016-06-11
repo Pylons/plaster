@@ -3,7 +3,7 @@ import sys
 PY2 = sys.version_info[0] == 2
 
 
-def add_metaclass(metaclass):
+def add_metaclass(metaclass):  # pragma: no cover
     """Class decorator for creating a class with a metaclass."""
 
     def wrapper(cls):

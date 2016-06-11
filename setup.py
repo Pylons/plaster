@@ -22,6 +22,7 @@ docs_require = [
 tests_require = [
     'pytest',
     'pytest-cov',
+    'mock',
 ]
 
 setup(

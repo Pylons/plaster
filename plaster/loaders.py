@@ -3,7 +3,6 @@ import pkg_resources
 from .exceptions import (
     LoaderNotFound,
     MultipleLoadersFound,
-    NoSectionError,
 )
 from .uri import parse_uri
 
@@ -21,7 +20,6 @@ def get_sections(config_uri):
         }
 
     """
-    config_uri = parse_uri(config_uri)
     loader = get_loader(config_uri)
     return loader.get_sections()
 
@@ -44,11 +42,6 @@ def get_settings(config_uri, section=None, defaults=None):
     returning the final configuration dictionary.
 
     """
-    config_uri = parse_uri(config_uri)
-    if section is None:
-        section = config_uri.fragment
-    if not section:
-        raise NoSectionError
     loader = get_loader(config_uri)
     return loader.get_settings(section, defaults)
 
@@ -66,7 +59,7 @@ def setup_logging(config_uri, defaults=None):
     return loader.setup_logging(defaults)
 
 
-def get_loader(config_uri, _working_set=pkg_resources.working_set):
+def get_loader(config_uri):
     """
     Find a :class:`plaster.interfaces.Loader` object capable of handling
     ``config_uri``.
@@ -79,7 +72,7 @@ def get_loader(config_uri, _working_set=pkg_resources.working_set):
     requested_scheme = config_uri.scheme
 
     matched_loaders = []
-    for loader in _working_set.iter_entry_points(group='plaster.loader'):
+    for loader in pkg_resources.iter_entry_points(group='plaster.loader'):
         if requested_scheme == loader.name:
             matched_loaders.append(loader)
 
