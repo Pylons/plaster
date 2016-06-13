@@ -82,7 +82,7 @@ def get_loader(config_uri):
                 matched_loaders.append(loader)
 
     if len(matched_loaders) < 1:
-        raise LoaderNotFound
+        raise LoaderNotFound(requested_scheme)
 
     if len(matched_loaders) > 1:
         raise MultipleLoadersFound(requested_scheme, matched_loaders)
