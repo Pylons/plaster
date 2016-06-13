@@ -65,7 +65,8 @@ def parse_uri(config_uri):
             fragment='',
         ).geturl()
         # strip off leading //
-        path = path[2:]
+        if path.startswith('//'):
+            path = path[2:]
         fragment = parts.fragment if parts.fragment else None
 
     else:

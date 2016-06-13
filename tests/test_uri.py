@@ -52,3 +52,9 @@ class TestURL(object):
         uri1 = self._callFUT('development.ini')
         uri2 = self._callFUT(uri1)
         assert uri1 is uri2
+
+    def test_colon_prefix_scheme(self):
+        uri = self._callFUT('egg:myapp#main')
+        assert uri.scheme == 'egg'
+        assert uri.path == 'myapp'
+        assert uri.fragment == 'main'
