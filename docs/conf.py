@@ -32,6 +32,7 @@ project_root = os.path.dirname(cwd)
 # version is used.
 sys.path.insert(0, project_root)
 
+# ensure the code is importable for use with autodoc
 import plaster
 
 # -- General configuration ---------------------------------------------
@@ -41,7 +42,11 @@ import plaster
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -110,17 +115,16 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output -------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-html_theme = 'default'
+# Add and use Pylons theme
+sys.path.append(os.path.abspath('_themes'))
+import pylons_sphinx_themes
+html_theme_path = pylons_sphinx_themes.get_html_themes_path()
+html_theme = 'pyramid'
 
-# Theme options are theme-specific and customize the look and feel of a
-# theme further.  For a list of options available for each theme, see the
-# documentation.
-#html_theme_options = {}
 
-# Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_options = {
+    'github_url': 'https://github.com/Pylons/pyramid_jinja2'
+}
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
