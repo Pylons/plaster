@@ -78,8 +78,9 @@ def parse_uri(config_uri):
             scheme = scheme[1:]
 
     if not scheme:
-        raise InvalidURI('Could not determine the loader scheme for '
-                         'the supplied "config_uri".')
+        raise InvalidURI(config_uri, (
+            'Could not determine the loader scheme for the supplied '
+            'config_uri.'))
 
     return PlasterURL(
         scheme=scheme,

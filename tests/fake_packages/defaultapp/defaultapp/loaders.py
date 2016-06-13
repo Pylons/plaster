@@ -26,7 +26,7 @@ class LoaderBase(plaster.Loader):
         try:
             result.update(_SECTIONS[section])
         except KeyError:
-            raise plaster.NoSectionError
+            raise plaster.NoSectionError(section)
         return result
 
     def setup_logging(self, defaults=None):
