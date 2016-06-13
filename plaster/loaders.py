@@ -61,10 +61,34 @@ def setup_logging(config_uri, defaults=None):
 
 def get_loader(config_uri):
     """
-    Find a :class:`plaster.Loader` object capable of handling ``config_uri``.
+    Find a :class:`plaster.ILoader` object capable of handling ``config_uri``.
 
     ``config_uri`` may be anything that can be parsed by
     :func:`plaster.parse_uri`.
+
+    """
+    config_uri = parse_uri(config_uri)
+    requested_scheme = config_uri.scheme
+
+    matched_loaders = find_loaders(config_uri)
+
+    if len(matched_loaders) < 1:
+        raise LoaderNotFound(requested_scheme)
+
+    if len(matched_loaders) > 1:
+        raise MultipleLoadersFound(requested_scheme, matched_loaders)
+
+    loader_info = matched_loaders[0]
+    loader = loader_info.load()
+    return loader
+
+
+def find_loaders(config_uri):
+    """
+    Find all loaders which satisfy the ``config_uri`` scheme.
+
+    Returns a list containing zero or more :class:`plaster.LoaderInfo`
+    objects.
 
     """
     config_uri = parse_uri(config_uri)
@@ -80,13 +104,31 @@ def get_loader(config_uri):
             if ext == requested_scheme:
                 matched_loaders.append(loader)
 
-    if len(matched_loaders) < 1:
-        raise LoaderNotFound(requested_scheme)
+    def load_entrypoint(ep):
+        loader_factory = ep.load()
+        return loader_factory(config_uri)
 
-    if len(matched_loaders) > 1:
-        raise MultipleLoadersFound(requested_scheme, matched_loaders)
+    return [
+        LoaderInfo(ep.name, lambda ep=ep: load_entrypoint(ep))
+        for ep in matched_loaders
+    ]
 
-    loader_ep = matched_loaders[0]
-    loader_factory = loader_ep.load()
-    loader = loader_factory(config_uri)
-    return loader
+
+class LoaderInfo(object):
+    """
+    An info object describing a specific :class:`plaster.ILoader`.
+
+    :ivar scheme: The full scheme of the loader.
+
+    """
+    def __init__(self, scheme, factory):
+        self.scheme = scheme
+        self.factory = factory
+
+    def load(self):
+        """
+        Create and return the :class:`plaster.ILoader` using the
+        ``config_uri`` that was used to find the loader info.
+
+        """
+        return self.factory()

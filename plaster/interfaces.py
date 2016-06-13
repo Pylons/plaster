@@ -4,9 +4,9 @@ from .compat import add_metaclass
 
 
 @add_metaclass(abc.ABCMeta)
-class Loader(object):
+class ILoader(object):
     """
-    A ``Loader`` is instantiated with a :class:`plaster.PlasterURL`.
+    An abstraction over an source of configuration settings.
 
     It is required to implement ``get_sections``, ``get_settings`` and
     ``setup_logging``.
@@ -16,10 +16,10 @@ class Loader(object):
     configurations. Services that depend on such functionality should document
     this so that it is easy to create custom loaders.
 
-    """
+    :ivar uri: The :class:`plaster.PlasterURL` object used to find the
+        :class:`plaster.ILoaderFactory`.
 
-    def __init__(self, uri):
-        self.uri = uri
+    """
 
     @abc.abstractmethod
     def get_sections(self):
@@ -51,5 +51,16 @@ class Loader(object):
         This function should, at least, configure the Python standard logging
         module. However, it may also be used to configure any other logging
         subsystems that serve a similar purpose.
+
+        """
+
+
+@add_metaclass(abc.ABCMeta)
+class ILoaderFactory(object):
+    @abc.abstractmethod
+    def __call__(self, uri):
+        """
+        A factory which accepts a :class:`plaster.PlasterURL` and returns a
+        :class:`plaster.ILoader` object.
 
         """

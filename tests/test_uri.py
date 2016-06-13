@@ -1,5 +1,6 @@
 import pytest
 
+
 class TestURL(object):
     def _callFUT(self, uri):
         from plaster.uri import parse_uri

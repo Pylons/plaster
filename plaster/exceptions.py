@@ -1,6 +1,6 @@
 class NoSectionError(ValueError):
     """
-    Raised by a :class:`plaster.Loader` which cannot find a section.
+    Raised by a :class:`plaster.ILoader` which cannot find a section.
 
     :ivar section: The name of the section that does not exist.
 
@@ -52,7 +52,7 @@ class MultipleLoadersFound(ValueError):
     requested ``scheme``.
 
     :ivar scheme: The scheme being matched.
-    :ivar loaders: A list of loader entry points.
+    :ivar loaders: A list of :class:`plaster.LoaderInfo` objects.
 
     """
     def __init__(self, scheme, loaders, message=None):
@@ -61,9 +61,9 @@ class MultipleLoadersFound(ValueError):
                 'Multiple plaster loaders were found for scheme="{0}". '
                 'Please specify a more specific config_uri. '
                 'Matched loaders: {1}'
-            ).format(scheme, ', '.join(loader.name
+            ).format(scheme, ', '.join(loader.scheme
                                        for loader in sorted(
-                                           loaders, key=lambda v: v.name)))
+                                           loaders, key=lambda v: v.scheme)))
         Exception.__init__(self, message)
         self.message = message
         self.scheme = scheme

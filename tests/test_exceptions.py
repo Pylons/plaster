@@ -78,6 +78,7 @@ class TestMultipleLoadersFound(object):
         assert exc.scheme == 'https'
         assert exc.loaders == [dummy]
 
+
 class DummyLoader(object):
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, scheme):
+        self.scheme = scheme
