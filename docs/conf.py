@@ -119,7 +119,7 @@ pygments_style = 'sphinx'
 sys.path.append(os.path.abspath('_themes'))
 import pylons_sphinx_themes
 html_theme_path = pylons_sphinx_themes.get_html_themes_path()
-html_theme = 'pyramid'
+html_theme = 'pylons'
 
 
 html_theme_options = {
