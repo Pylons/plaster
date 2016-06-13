@@ -6,7 +6,7 @@ from .compat import add_metaclass
 @add_metaclass(abc.ABCMeta)
 class Loader(object):
     """
-    A ``Loader`` is instantiated with a :class:`plaster.uri.PlasterURL`.
+    A ``Loader`` is instantiated with a :class:`plaster.PlasterURL`.
 
     It is required to implement ``get_sections``, ``get_settings`` and
     ``setup_logging``.
@@ -36,7 +36,7 @@ class Loader(object):
         If ``section`` is not ``None`` then it will be used. Otherwise, the
         ``section`` may be populated by the fragment defined in the
         ``config_uri#fragment`` syntax. If ``section`` is still ``None`` then
-        a :class:`plaster.exceptions.NoSectionError` error should be raised.
+        a :class:`plaster.NoSectionError` error should be raised.
 
         Any values in ``defaults`` may be overridden prior to returning
         the final configuration dictionary.

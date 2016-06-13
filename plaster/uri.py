@@ -7,19 +7,19 @@ from .exceptions import InvalidURI
 class PlasterURL(object):
     """
     Represents the components of a URL used to locate a
-    :class:`plaster.interfaces.Loader`.
+    :class:`plaster.Loader`.
 
-    :param scheme: The name of the loader backend.
+    :ivar scheme: The name of the loader backend.
 
-    :param path: The loader-specific path string.
-      This is the entirety of the ``config_uri`` passed to
-      :func:`plaster.parse_uri` without the scheme and fragment.
+    :ivar path: The loader-specific path string.
+        This is the entirety of the ``config_uri`` passed to
+        :func:`plaster.parse_uri` without the scheme and fragment.
 
-    :param fragment: A loader-specific default section name.
-      This parameter may be used by loaders in scenarios where they provide
-      APIs that support a default name. For example, a loader that provides
-      ``get_wsgi_app`` may use the fragment to determine the name of the
-      section containing the WSGI app if none was explicitly defined.
+    :ivar fragment: A loader-specific default section name.
+        This parameter may be used by loaders in scenarios where they provide
+        APIs that support a default name. For example, a loader that provides
+        ``get_wsgi_app`` may use the fragment to determine the name of the
+        section containing the WSGI app if none was explicitly defined.
 
     """
 
@@ -37,11 +37,11 @@ class PlasterURL(object):
 
 def parse_uri(config_uri):
     """
-    Return a :class:`.PlasterURI` object parsed from the ``config_uri``.
+    Return a :class:`.PlasterURL` object parsed from the ``config_uri``.
 
     ``config_uri`` can be a relative or absolute file path such as
     ``development.ini`` or ``/path/to/development.ini``. The file must have
-    an extension that can be handled by a :class:`plaster.interfaces.Loader`
+    an extension that can be handled by a :class:`plaster.Loader`
     registered with the system.
 
     Alternatively, ``config_uri`` may be a :rfc:`1738`-style string.

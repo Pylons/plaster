@@ -36,7 +36,7 @@ def get_settings(config_uri, section=None, defaults=None):
     If ``name`` is not ``None`` then it will be used. Otherwise, the ``name``
     will be populated by the fragment defined in the ``config_uri#name``
     syntax. If ``name`` is still ``None`` then a
-    :class:`plaster.exceptions.NoSectionError` error will be raised.
+    :class:`plaster.NoSectionError` error will be raised.
 
     Any values in ``defaults`` may be overridden by the loader prior to
     returning the final configuration dictionary.
@@ -61,8 +61,7 @@ def setup_logging(config_uri, defaults=None):
 
 def get_loader(config_uri):
     """
-    Find a :class:`plaster.interfaces.Loader` object capable of handling
-    ``config_uri``.
+    Find a :class:`plaster.Loader` object capable of handling ``config_uri``.
 
     ``config_uri`` may be anything that can be parsed by
     :func:`plaster.parse_uri`.
