@@ -10,8 +10,11 @@ _SECTIONS = {
 }
 
 
-class LoaderBase(plaster.Loader):
+class LoaderBase(plaster.ILoader):
     entry_point_key = None
+
+    def __init__(self, uri):
+        self.uri = uri
 
     def get_sections(self):
         return list(_SECTIONS.keys())

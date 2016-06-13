@@ -4,6 +4,7 @@ import pkg_resources
 import pytest
 import sys
 
+
 @pytest.yield_fixture(scope='session')
 def fake_loaders():
     test_dir = os.path.dirname(__file__)
@@ -19,6 +20,7 @@ def fake_loaders():
             yield ws
     finally:
         sys.path.remove(os.path.dirname(info_dir))
+
 
 class Test_get_loader(object):
     @pytest.fixture(autouse=True)
@@ -64,6 +66,47 @@ class Test_get_loader(object):
         with pytest.raises(Exception):
             self._callFUT('development.broken')
 
+    def test_it_notfound(self):
+        from plaster.exceptions import LoaderNotFound
+        with pytest.raises(LoaderNotFound):
+            self._callFUT('development.notfound')
+
+
+class Test_find_loaders(object):
+    @pytest.fixture(autouse=True)
+    def working_set(self, fake_loaders):
+        self.working_set = fake_loaders
+
+    def _callFUT(self, config_uri):
+        from plaster.loaders import find_loaders
+        return find_loaders(config_uri)
+
+    def test_simple_uri(self):
+        loaders = self._callFUT('development.conf')
+        assert len(loaders) == 1
+        assert loaders[0].scheme == 'conf'
+        loader = loaders[0].load()
+        assert loader.entry_point_key == 'conf'
+
+    def test_scheme_specific_uri(self):
+        loaders = self._callFUT('development.ini')
+        assert len(loaders) == 1
+        assert loaders[0].scheme == 'ini+foo'
+        loader = loaders[0].load()
+        assert loader.entry_point_key == 'ini+foo'
+
+    def test_multiple_yaml_loaders(self):
+        loaders = self._callFUT('development.yaml')
+        assert len(loaders) == 2
+        schemes = set([l.scheme for l in loaders])
+        assert 'yaml+foo' in schemes
+        assert 'yaml+bar' in schemes
+
+    def test_it_notfound(self):
+        loaders = self._callFUT('development.notfound')
+        assert len(loaders) == 0
+
+
 class Test_get_sections(object):
     @pytest.fixture(autouse=True)
     def working_set(self, fake_loaders):
@@ -80,6 +123,7 @@ class Test_get_sections(object):
     def test_it_bad(self):
         with pytest.raises(Exception):
             self._callFUT('development.bad')
+
 
 class Test_get_settings(object):
     @pytest.fixture(autouse=True)
@@ -114,6 +158,7 @@ class Test_get_settings(object):
     def test_it_bad(self):
         with pytest.raises(Exception):
             self._callFUT('development.bad')
+
 
 class Test_setup_logging(object):
     @pytest.fixture(autouse=True)

@@ -79,7 +79,7 @@ Alternatively, the application may depend on a specifically named section:
 Configuring logging
 -------------------
 
-``plaster`` requires a :class:`Loader` to provide a way to configure
+``plaster`` requires a :class:`plaster.ILoader` to provide a way to configure
 Python's stdlib logging module. In order to utilize this feature, simply
 call :func:`plaster.setup_logging` from your application.
 
@@ -95,7 +95,7 @@ Finding a loader
 
 At the heart of ``plaster`` is the ``config_uri`` format. This format is
 basically ``<scheme>://<path>`` with a few variations. The ``scheme`` is used
-to find a :class:`plaster.Loader` implementation.
+to find a :class:`plaster.ILoader` implementation.
 
 .. code-block:: python
 
@@ -108,7 +108,7 @@ to find a :class:`plaster.Loader` implementation.
 A ``config_uri`` may be a file path or an :rfc:`3986` URI. In the case of a
 file path, the file extension is used as the scheme. In either case the
 scheme is the only thing that ``plaster`` cares about with respect to finding
-a valid :class:`plaster.Loader`.
+a valid :class:`plaster.ILoader`.
 
 If a loader is registered with a scheme containing a ``+`` character then it
 will match any schemes using simply the prefix. For example, if a loader is
@@ -134,8 +134,8 @@ your ``setup.py``:
         },
     )
 
-In this example the ``plaster_pastedeploy.Loader`` class will be used as a
-factory for creating :class:`plaster.Loader` objects. Each loader is passed
+In this example the ``myapp.Loader`` class will be used as a factory for
+creating :class:`plaster.ILoader` objects. Each loader is passed
 a :class:`plaster.PlasterURL` instance, the result of parsing the
 ``config_uri`` to determine the scheme and fragment.
 
@@ -143,7 +143,10 @@ a :class:`plaster.PlasterURL` instance, the result of parsing the
 
     import plaster
 
-    class Loader(plaster.Loader):
+    class Loader(plaster.ILoader):
+        def __init__(self, uri):
+            self.uri = uri
+
         def get_sections(self):
             return ['myapp', 'yourapp']
 

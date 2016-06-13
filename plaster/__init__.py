@@ -7,9 +7,12 @@ from .exceptions import (
     NoSectionError,
 )
 from .interfaces import (
-    Loader,
+    ILoader,
+    ILoaderFactory,
 )
 from .loaders import (
+    LoaderInfo,
+    find_loaders,
     get_loader,
     get_sections,
     get_settings,

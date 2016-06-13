@@ -7,7 +7,7 @@ from .exceptions import InvalidURI
 class PlasterURL(object):
     """
     Represents the components of a URL used to locate a
-    :class:`plaster.Loader`.
+    :class:`plaster.ILoader`.
 
     :ivar scheme: The name of the loader backend.
 
@@ -41,7 +41,7 @@ def parse_uri(config_uri):
 
     ``config_uri`` can be a relative or absolute file path such as
     ``development.ini`` or ``/path/to/development.ini``. The file must have
-    an extension that can be handled by a :class:`plaster.Loader`
+    an extension that can be handled by a :class:`plaster.ILoader`
     registered with the system.
 
     Alternatively, ``config_uri`` may be a :rfc:`1738`-style string.
