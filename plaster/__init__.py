@@ -8,10 +8,10 @@ from .exceptions import (
 )
 from .interfaces import (
     ILoader,
+    ILoaderInfo,
     ILoaderFactory,
 )
 from .loaders import (
-    LoaderInfo,
     find_loaders,
     get_loader,
     get_sections,

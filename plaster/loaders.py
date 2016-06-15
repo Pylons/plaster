@@ -4,6 +4,7 @@ from .exceptions import (
     LoaderNotFound,
     MultipleLoadersFound,
 )
+from .interfaces import ILoaderInfo
 from .uri import parse_uri
 
 
@@ -87,7 +88,7 @@ def find_loaders(config_uri):
     """
     Find all loaders which satisfy the ``config_uri`` scheme.
 
-    Returns a list containing zero or more :class:`plaster.LoaderInfo`
+    Returns a list containing zero or more :class:`plaster.ILoaderInfo`
     objects.
 
     """
@@ -104,31 +105,18 @@ def find_loaders(config_uri):
             if ext == requested_scheme:
                 matched_loaders.append(loader)
 
-    def load_entrypoint(ep):
-        loader_factory = ep.load()
-        return loader_factory(config_uri)
-
     return [
-        LoaderInfo(ep.name, lambda ep=ep: load_entrypoint(ep))
+        EntryPointLoaderInfo(ep, config_uri)
         for ep in matched_loaders
     ]
 
 
-class LoaderInfo(object):
-    """
-    An info object describing a specific :class:`plaster.ILoader`.
-
-    :ivar scheme: The full scheme of the loader.
-
-    """
-    def __init__(self, scheme, factory):
-        self.scheme = scheme
-        self.factory = factory
+class EntryPointLoaderInfo(ILoaderInfo):
+    def __init__(self, ep, config_uri):
+        self.scheme = ep.name
+        self.entrypoint = ep
+        self.config_uri = config_uri
 
     def load(self):
-        """
-        Create and return the :class:`plaster.ILoader` using the
-        ``config_uri`` that was used to find the loader info.
-
-        """
-        return self.factory()
+        factory = self.entrypoint.load()
+        return factory(self.config_uri)

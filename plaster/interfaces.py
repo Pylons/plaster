@@ -64,3 +64,20 @@ class ILoaderFactory(object):
         :class:`plaster.ILoader` object.
 
         """
+
+
+@add_metaclass(abc.ABCMeta)
+class ILoaderInfo(object):
+    """
+    An info object describing a specific :class:`plaster.ILoader`.
+
+    :ivar scheme: The full scheme of the loader.
+
+    """
+
+    @abc.abstractmethod
+    def load(self):
+        """
+        Create and return an :class:`plaster.ILoader` instance.
+
+        """

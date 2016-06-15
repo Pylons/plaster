@@ -15,13 +15,11 @@ Application API
 
 .. autofunction:: find_loaders
 
-.. autoclass:: LoaderInfo
+.. autoclass:: ILoaderInfo
     :members:
 
 Loader API
 ==========
-
-.. autofunction:: parse_uri
 
 .. autoclass:: ILoader
     :members:
@@ -30,6 +28,8 @@ Loader API
     :members:
 
     .. automethod:: __call__
+
+.. autofunction:: parse_uri
 
 .. autoclass:: PlasterURL
     :members:
