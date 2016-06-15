@@ -1,0 +1,11 @@
+[other.loader]
+ini = defaultapp.loaders:WontBeLoaded
+
+[plaster.loader]
+bad = defaultapp.loaders:BadLoader
+broken = defaultapp.loaders.BadLoader
+conf = defaultapp.loaders:ConfLoader
+ini+foo = defaultapp.loaders:INILoader
+yaml+bar = defaultapp.loaders:YAMLBarLoader
+yaml+foo = defaultapp.loaders:YAMLFooLoader
+

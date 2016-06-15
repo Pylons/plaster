@@ -62,6 +62,5 @@ env27
 .idea
 cover
 
-!tests/fake_packages/DefaultApp.egg/
-tests/fake_packages/DefaultApp.egg/EGG-INFO
-!tests/fake_packages/DefaultApp.egg/DefaultApp.egg-info/
+!tests/fake_packages/defaultapp/
+!tests/fake_packages/defaultapp/DefaultApp.egg-info/
