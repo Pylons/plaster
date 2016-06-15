@@ -27,7 +27,7 @@ tests_require = [
 
 setup(
     name='plaster',
-    version='0.1.0',
+    version='0.2',
     description='A loader interface around multiple config file formats.',
     long_description=readme + '\n\n' + changes,
     author='Michael Merickel',

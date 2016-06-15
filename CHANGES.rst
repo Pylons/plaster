@@ -1,5 +1,5 @@
-unreleased
-==========
+0.2 (2016-06-15)
+================
 
 - Allow ``config_uri`` syntax ``scheme:path`` alongside ``scheme://path``.
   See https://github.com/mmerickel/plaster/issues/3
@@ -19,7 +19,7 @@ unreleased
   are expected to implement.
   See https://github.com/mmerickel/plaster/pull/5
 
-0.1.0 (2016-06-12)
-==================
+0.1 (2016-06-12)
+================
 
 - Initial release.
