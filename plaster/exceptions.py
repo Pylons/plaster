@@ -52,7 +52,7 @@ class MultipleLoadersFound(ValueError):
     requested ``scheme``.
 
     :ivar scheme: The scheme being matched.
-    :ivar loaders: A list of :class:`plaster.LoaderInfo` objects.
+    :ivar loaders: A list of :class:`plaster.ILoaderInfo` objects.
 
     """
     def __init__(self, scheme, loaders, message=None):
