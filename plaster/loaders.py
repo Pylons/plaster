@@ -20,6 +20,9 @@ def get_sections(config_uri):
             for section in sections
         }
 
+    ``config_uri`` may be anything that can be parsed by
+    :func:`plaster.parse_uri`.
+
     """
     loader = get_loader(config_uri)
     return loader.get_sections()
@@ -33,6 +36,9 @@ def get_settings(config_uri, section=None, defaults=None):
 
         settings = plaster.get_settings(...)
         print(settings['foo'])
+
+    ``config_uri`` may be anything that can be parsed by
+    :func:`plaster.parse_uri`.
 
     If ``name`` is not ``None`` then it will be used. Otherwise, the ``name``
     will be populated by the fragment defined in the ``config_uri#name``
@@ -54,6 +60,9 @@ def setup_logging(config_uri, defaults=None):
     This function should, at least, configure the Python standard logging
     module. However, it may also be used to configure any other logging
     subsystems that serve a similar purpose.
+
+    ``config_uri`` may be anything that can be parsed by
+    :func:`plaster.parse_uri`.
 
     """
     loader = get_loader(config_uri)
@@ -87,6 +96,9 @@ def get_loader(config_uri):
 def find_loaders(config_uri):
     """
     Find all loaders which satisfy the ``config_uri`` scheme.
+
+    ``config_uri`` may be anything that can be parsed by
+    :func:`plaster.parse_uri`.
 
     Returns a list containing zero or more :class:`plaster.ILoaderInfo`
     objects.
