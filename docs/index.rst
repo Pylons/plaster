@@ -65,7 +65,7 @@ specify the name of the section (``myapp``) to be loaded:
     import plaster
 
     config_uri = 'development.ini#myapp'
-    settings = plaster.get_settings(settings)
+    settings = plaster.get_settings(config_uri)
 
 Alternatively, the application may depend on a specifically named section:
 
@@ -74,7 +74,7 @@ Alternatively, the application may depend on a specifically named section:
     import plaster
 
     config_uri = 'development.ini#myapp'
-    settings = plaster.get_settings(settings, section='thisapp')
+    settings = plaster.get_settings(config_uri, section='thisapp')
 
 Configuring logging
 -------------------
