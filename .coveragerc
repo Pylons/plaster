@@ -1,3 +1,14 @@
 [run]
-source = plaster, tests
-branch = True
+parallel = true
+source =
+    plaster
+    tests
+
+[paths]
+source =
+    src/plaster
+    */site-packages/plaster
+
+[report]
+show_missing = true
+precision = 2

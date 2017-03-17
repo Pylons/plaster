@@ -5,6 +5,7 @@ from .exceptions import (
     LoaderNotFound,
     MultipleLoadersFound,
     NoSectionError,
+    PlasterError,
 )
 from .interfaces import (
     ILoader,

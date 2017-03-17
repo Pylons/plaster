@@ -1,14 +1,11 @@
 from setuptools import setup, find_packages
-import os
 
-here = os.path.abspath(os.path.dirname(__file__))
-try:
-    with open(os.path.join(here, 'README.rst')) as f:
-        readme = f.read()
-    with open(os.path.join(here, 'CHANGES.txt')) as f:
-        CHANGES = f.read()
-except IOError:
-    readme = changes = ''
+def readfile(name):
+    with open(name) as f:
+        return f.read()
+
+readme = readfile('README.rst')
+changes = readfile('CHANGES.rst')
 
 requires = [
     'setuptools', # for pkg_resources
@@ -33,7 +30,8 @@ setup(
     author='Michael Merickel',
     author_email='michael@merickel.org',
     url='https://github.com/mmerickel/plaster',
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages('src', exclude=['tests']),
+    package_dir={'': 'src'},
     include_package_data=True,
     install_requires=requires,
     extras_require={
