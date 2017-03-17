@@ -37,6 +37,9 @@ Loader API
 Exceptions
 ==========
 
+.. autoexception:: PlasterError
+    :members:
+
 .. autoexception:: InvalidURI
     :members:
 
