@@ -1,0 +1,8 @@
+setup.py
+app2/__init__.py
+app2/loaders.py
+app2.egg-info/PKG-INFO
+app2.egg-info/SOURCES.txt
+app2.egg-info/dependency_links.txt
+app2.egg-info/entry_points.txt
+app2.egg-info/top_level.txt

@@ -45,6 +45,17 @@ Once you have a copy of the source, you can install it with:
 
 .. _Github repo: https://github.com/mmerickel/plaster
 
+Protocols
+=========
+
+``plaster`` supports custom loader protocols which loaders may choose to
+implement to provide extra functionality over the basic
+:class:`plaster.ILoader` interface. A :term:`loader protocol` is intentionally
+very loosely defined but it basically boils down to a loader object that
+supports extra methods with agreed-upon signatures. Right now the only
+officially-supported protocol is ``wsgi`` which defines a loader that should
+implement the :class:`plaster.protocols.IWSGIProtocol` interface.
+
 Usage
 =====
 
@@ -79,7 +90,7 @@ Alternatively, the application may depend on a specifically named section:
 Configuring logging
 -------------------
 
-``plaster`` requires a :class:`plaster.ILoader` to provide a way to configure
+``plaster`` requires a :term:`loader` to provide a way to configure
 Python's stdlib logging module. In order to utilize this feature, simply
 call :func:`plaster.setup_logging` from your application.
 
@@ -95,49 +106,45 @@ Finding a loader
 
 At the heart of ``plaster`` is the ``config_uri`` format. This format is
 basically ``<scheme>://<path>`` with a few variations. The ``scheme`` is used
-to find a :class:`plaster.ILoader` implementation.
+to find an :class:`plaster.ILoaderFactory`.
 
 .. code-block:: python
 
     import plaster
 
     config_uri = 'ini+pastedeploy://development.ini#myapp'
-    loader = plaster.get_loader(config_uri)
+    loader = plaster.get_loader(config_uri, protocol='wsgi')
     settings = loader.get_settings()
 
 A ``config_uri`` may be a file path or an :rfc:`3986` URI. In the case of a
 file path, the file extension is used as the scheme. In either case the
-scheme is the only thing that ``plaster`` cares about with respect to finding
-a valid :class:`plaster.ILoader`.
-
-If a loader is registered with a scheme containing a ``+`` character then it
-will match any schemes using simply the prefix. For example, if a loader is
-registered for ``ini+pastedeploy``, it will automatically match a scheme of
-simply ``ini`` but ``ini+pastedeploy`` may be used to disambiguate the lookup.
+scheme and the protocol are the only items that ``plaster`` cares about with
+respect to finding an :class:`plaster.ILoaderFactory`.
 
 Writing your own loader
 -----------------------
 
-``plaster`` finds loaders registered for the ``plaster.loader`` entry point in
-your ``setup.py``:
+``plaster`` finds loaders registered for the ``plaster.loader_factory`` entry
+point in your ``setup.py``:
 
 .. code-block:: python
 
     from setuptools import setup
 
     setup(
+        name='myapp',
         # ...
         entry_points={
-            'plaster.loader': [
-                'dict+myapp = myapp:Loader',
+            'plaster.loader_factory': [
+                'dict = myapp:Loader',
             ],
         },
     )
 
-In this example the ``myapp.Loader`` class will be used as a factory for
-creating :class:`plaster.ILoader` objects. Each loader is passed
-a :class:`plaster.PlasterURL` instance, the result of parsing the
-``config_uri`` to determine the scheme and fragment.
+In this example the importable ``myapp.Loader`` class will be used as
+:class:`plaster.ILoaderFactory` for creating :class:`plaster.ILoader` objects.
+Each loader is passed a :class:`plaster.PlasterURL` instance, the result of
+parsing the ``config_uri`` to determine the scheme and fragment.
 
 .. code-block:: python
 
@@ -174,8 +181,26 @@ This loader may then be used:
 
     import plaster
 
-    settings = plaster.get_settings('dict+myapp://', section='myapp')
+    settings = plaster.get_settings('dict://', section='myapp')
     assert settings['a'] == 1
+
+It's also possible to lookup the specific loader by suffixing the scheme
+with the name of the package:
+
+.. code-block:: python
+
+    settings2 = plaster.get_settings('dict+myapp://', section='myapp')
+    assert settings == settings2
+
+Supporting a custom protocol
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, loaders are exposed via the ``plaster.loader_factory`` entry
+point. In order to register a loader that supports a custom protocol it should
+register itself on a ``plaster.loader_factory.<protocol>`` entry point. This
+is an independent loader namespace and in most scenarios an author would
+register the loader for the default namespace as well as the protocol-specific
+one to make it discoverable whether or not the protocol is requested.
 
 Acknowledgments
 ===============

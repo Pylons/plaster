@@ -17,3 +17,9 @@ Glossary
         An object conforming to the :class:`plaster.ILoader` interface. A
         loader is responsible for locating and parsing the underlying
         configuration format for the given :term:`config uri`.
+
+    loader protocol
+        A :term:`loader` may implement zero or more custom named protocols.
+        An example would be the ``wsgi`` protocol which requires that a loader
+        implement certain methods like
+        ``wsgi_app = get_wsgi_app(name=None, defaults=None)``.

@@ -11,10 +11,11 @@ class ILoader(object):
     It is required to implement ``get_sections``, ``get_settings`` and
     ``setup_logging``.
 
-    Optionally it may also provide other loader-specific functionality such
+    Optionally, it may also provide other loader-specific functionality such
     as ``get_wsgi_app`` and ``get_wsgi_server`` for loading WSGI
     configurations. Services that depend on such functionality should document
-    this so that it is easy to create custom loaders.
+    the required functionality behind a particular :term:`loader protocol`
+    which custom loaders can implement.
 
     :ivar uri: The :class:`plaster.PlasterURL` object used to find the
         :class:`plaster.ILoaderFactory`.
@@ -72,11 +73,13 @@ class ILoaderInfo(object):
     An info object describing a specific :class:`plaster.ILoader`.
 
     :ivar scheme: The full scheme of the loader.
+    :ivar protocol: The supported :term:`loader protocol`.
+    :ivar factory: The :class:`plaster.ILoaderFactory`.
 
     """
 
     @abc.abstractmethod
-    def load(self):
+    def load(self, config_uri):
         """
         Create and return an :class:`plaster.ILoader` instance.
 

@@ -3,6 +3,8 @@ parallel = true
 source =
     plaster
     tests
+omit =
+    tests/fake_packages/*
 
 [paths]
 source =

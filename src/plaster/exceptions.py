@@ -40,16 +40,21 @@ class LoaderNotFound(PlasterError, ValueError):
     ``scheme``.
 
     :ivar scheme: The scheme being matched.
+    :ivar protocol: The requested :term:`loader protocol` or ``None``.
 
     """
-    def __init__(self, scheme, message=None):
+    def __init__(self, scheme, protocol=None, message=None):
         if message is None:
+            scheme_msg = 'scheme "{0}"'.format(scheme)
+            if protocol is not None:
+                scheme_msg += ', protocol "{0}"'.format(protocol)
             message = (
-                'Could not find a matching loader for the scheme "{0}".'
-                .format(scheme))
+                'Could not find a matching loader for the {0}.'
+                .format(scheme_msg))
         super(LoaderNotFound, self).__init__(message)
         self.message = message
         self.scheme = scheme
+        self.protocol = protocol
 
 
 class MultipleLoadersFound(PlasterError, ValueError):
@@ -58,19 +63,24 @@ class MultipleLoadersFound(PlasterError, ValueError):
     requested ``scheme``.
 
     :ivar scheme: The scheme being matched.
+    :ivar protocol: The requested :term:`loader protocol` or ``None``.
     :ivar loaders: A list of :class:`plaster.ILoaderInfo` objects.
 
     """
-    def __init__(self, scheme, loaders, message=None):
+    def __init__(self, scheme, loaders, protocol=None, message=None):
         if message is None:
+            scheme_msg = 'scheme "{0}"'.format(scheme)
+            if protocol is not None:
+                scheme_msg += ', protocol "{0}"'.format(protocol)
+            loader_list = ', '.join(loader.scheme for loader in sorted(
+                loaders, key=lambda v: v.scheme))
             message = (
-                'Multiple plaster loaders were found for scheme="{0}". '
+                'Multiple plaster loaders were found for {0}. '
                 'Please specify a more specific config_uri. '
                 'Matched loaders: {1}'
-            ).format(scheme, ', '.join(loader.scheme
-                                       for loader in sorted(
-                                           loaders, key=lambda v: v.scheme)))
+            ).format(scheme_msg, loader_list)
         super(MultipleLoadersFound, self).__init__(message)
         self.message = message
         self.scheme = scheme
+        self.protocol = protocol
         self.loaders = loaders

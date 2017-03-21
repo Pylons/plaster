@@ -34,6 +34,15 @@ Loader API
 .. autoclass:: PlasterURL
     :members:
 
+
+.. _protocols:
+
+Protocols
+=========
+
+.. autoclass:: plaster.protocols.IWSGIProtocol
+    :members:
+
 Exceptions
 ==========
 
