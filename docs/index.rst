@@ -177,6 +177,13 @@ This loader may then be used:
     settings = plaster.get_settings('dict+myapp://', section='myapp')
     assert settings['a'] == 1
 
+Acknowledgments
+===============
+
+This API is heavily inspired by conversations, contributions, and design put
+forth in https://github.com/inklesspen/montague and
+https://metaclassical.com/announcing-montague-the-new-way-to-configure-python-applications/.
+
 More Information
 ================
 
@@ -184,6 +191,7 @@ More Information
    :maxdepth: 1
 
    api
+   glossary
    contributing
    changes
 
