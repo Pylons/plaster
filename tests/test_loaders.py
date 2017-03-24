@@ -109,6 +109,13 @@ class Test_find_loaders(object):
         loader = loaders[0].load('development.conf')
         assert loader.entry_point_key == 'conf'
 
+    def test_case_insensitive_scheme(self):
+        loaders = self._callFUT('CONF')
+        assert len(loaders) == 1
+        assert loaders[0].scheme == 'conf+app1'
+        loader = loaders[0].load('development.conf')
+        assert loader.entry_point_key == 'conf'
+
     def test_scheme_specific_uri(self):
         loaders = self._callFUT('ini')
         assert len(loaders) == 1

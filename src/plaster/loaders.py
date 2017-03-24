@@ -131,12 +131,16 @@ def find_loaders(scheme=None, protocol=None):
             scheme = parts[0]
             entry_points = distro.get_entry_map(group).values()
 
+    # match the scheme case-insensitive
+    if scheme is not None:
+        scheme = scheme.lower()
+
     # only search entry points
     if entry_points is None:
         entry_points = pkg_resources.iter_entry_points(group)
 
     for loader in entry_points:
-        if scheme is None or scheme == loader.name:
+        if scheme is None or scheme == loader.name.lower():
             matched_loaders.append(loader)
 
     return [
