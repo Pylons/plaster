@@ -24,6 +24,8 @@ def add_metaclass(metaclass):  # pragma: no cover
 
 if PY2:
     import urlparse
+    from urllib import urlencode
 else:
     from urllib import parse
     urlparse = parse
+    urlencode = parse.urlencode
