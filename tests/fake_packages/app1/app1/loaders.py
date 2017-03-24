@@ -1,4 +1,5 @@
 import plaster
+from plaster.protocols import IWSGIProtocol
 
 _SECTIONS = {
     'a': {
@@ -42,15 +43,32 @@ class ConfLoader(LoaderBase):
 
 
 class INILoader(LoaderBase):
-    entry_point_key = 'ini+foo'
+    entry_point_key = 'ini'
+
+
+class INIWSGILoader(IWSGIProtocol, LoaderBase):
+    entry_point_key = 'ini+wsgi'
+
+    def get_wsgi_app(self, name=None, defaults=None):
+        return 'wsgi app'
+
+    def get_wsgi_filter(self, name=None, defaults=None):
+        return 'wsgi filter'
+
+    def get_wsgi_server(self, name=None, defaults=None):
+        return 'wsgi server'
+
+
+class YAMLLoader(LoaderBase):
+    entry_point_key = 'yaml'
 
 
 class YAMLFooLoader(LoaderBase):
     entry_point_key = 'yaml+foo'
 
 
-class YAMLBarLoader(LoaderBase):
-    entry_point_key = 'yaml+bar'
+class DuplicateLoader(LoaderBase):
+    entry_point_key = 'dup+app1'
 
 
 class BadLoader(object):

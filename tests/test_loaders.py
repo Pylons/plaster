@@ -8,18 +8,23 @@ import sys
 @pytest.yield_fixture(scope='session')
 def fake_loaders():
     test_dir = os.path.dirname(__file__)
-    info_dir = os.path.join(
-        test_dir, 'fake_packages', 'defaultapp', 'DefaultApp.egg-info')
     ws = pkg_resources.WorkingSet()
-    ws.add_entry(os.path.dirname(info_dir))
-    sys.path.append(os.path.dirname(info_dir))
+    paths = []
+    for name in ('app1', 'app2'):
+        info_dir = os.path.join(test_dir, 'fake_packages', name)
+        ws.add_entry(info_dir)
+        paths.append(info_dir)
+    sys.path.extend(paths)
     try:
-        with mock.patch(
-            'pkg_resources.iter_entry_points', ws.iter_entry_points,
+        with mock.patch.multiple(
+            'pkg_resources',
+            working_set=ws,
+            iter_entry_points=ws.iter_entry_points,
         ):
             yield ws
     finally:
-        sys.path.remove(os.path.dirname(info_dir))
+        for path in paths:
+            sys.path.remove(path)
 
 
 class Test_get_loader(object):
@@ -27,9 +32,9 @@ class Test_get_loader(object):
     def working_set(self, fake_loaders):
         self.working_set = fake_loaders
 
-    def _callFUT(self, config_uri):
+    def _callFUT(self, *args, **kwargs):
         from plaster.loaders import get_loader
-        return get_loader(config_uri)
+        return get_loader(*args, **kwargs)
 
     def test_simple_uri(self):
         loader = self._callFUT('development.conf')
@@ -39,18 +44,30 @@ class Test_get_loader(object):
         loader = self._callFUT('conf://development.conf')
         assert loader.entry_point_key == 'conf'
 
-    def test_scheme_specific_uri(self):
-        loader = self._callFUT('ini+foo://development.ini')
-        assert loader.entry_point_key == 'ini+foo'
+    def test_scheme_uri_for_pkg(self):
+        loader = self._callFUT('conf+app1://')
+        assert loader.entry_point_key == 'conf'
 
-    def test_compound_uri_with_extension(self):
+    def test_path_with_extension(self):
         loader = self._callFUT('development.ini')
-        assert loader.entry_point_key == 'ini+foo'
+        assert loader.entry_point_key == 'ini'
 
-    def test_yaml_loader_fails(self):
+    def test_path_with_extension_and_protocol(self):
+        loader = self._callFUT('development.ini', protocol='wsgi')
+        assert loader.entry_point_key == 'ini+wsgi'
+
+    def test_dup(self):
         from plaster.exceptions import MultipleLoadersFound
         with pytest.raises(MultipleLoadersFound):
-            self._callFUT('development.yaml')
+            self._callFUT('dup://development.ini')
+
+    def test_dedup_app1(self):
+        loader = self._callFUT('dup+app1://development.ini')
+        assert loader.entry_point_key == 'dup+app1'
+
+    def test_dedup_app2(self):
+        loader = self._callFUT('dup+app2://development.ini')
+        assert loader.entry_point_key == 'dup+app2'
 
     def test_other_groups(self):
         from plaster.exceptions import LoaderNotFound
@@ -58,7 +75,7 @@ class Test_get_loader(object):
             self._callFUT('other-scheme://development.ini')
 
     def test_bad(self):
-        from defaultapp.loaders import BadLoader
+        from app1.loaders import BadLoader
         loader = self._callFUT('development.bad')
         assert isinstance(loader, BadLoader)
 
@@ -71,39 +88,43 @@ class Test_get_loader(object):
         with pytest.raises(LoaderNotFound):
             self._callFUT('development.notfound')
 
+    def test_fallback_non_pkg_scheme(self):
+        loader = self._callFUT('yaml+bar://development.yml')
+        assert loader.entry_point_key == 'yaml+bar'
+
 
 class Test_find_loaders(object):
     @pytest.fixture(autouse=True)
     def working_set(self, fake_loaders):
         self.working_set = fake_loaders
 
-    def _callFUT(self, config_uri):
+    def _callFUT(self, *args, **kwargs):
         from plaster.loaders import find_loaders
-        return find_loaders(config_uri)
+        return find_loaders(*args, **kwargs)
 
     def test_simple_uri(self):
-        loaders = self._callFUT('development.conf')
+        loaders = self._callFUT('conf')
         assert len(loaders) == 1
-        assert loaders[0].scheme == 'conf'
-        loader = loaders[0].load()
+        assert loaders[0].scheme == 'conf+app1'
+        loader = loaders[0].load('development.conf')
         assert loader.entry_point_key == 'conf'
 
     def test_scheme_specific_uri(self):
-        loaders = self._callFUT('development.ini')
+        loaders = self._callFUT('ini')
         assert len(loaders) == 1
-        assert loaders[0].scheme == 'ini+foo'
-        loader = loaders[0].load()
-        assert loader.entry_point_key == 'ini+foo'
+        assert loaders[0].scheme == 'ini+app1'
+        loader = loaders[0].load('development.ini')
+        assert loader.entry_point_key == 'ini'
 
     def test_multiple_yaml_loaders(self):
-        loaders = self._callFUT('development.yaml')
+        loaders = self._callFUT('dup')
         assert len(loaders) == 2
         schemes = set([l.scheme for l in loaders])
-        assert 'yaml+foo' in schemes
-        assert 'yaml+bar' in schemes
+        assert 'dup+app1' in schemes
+        assert 'dup+app2' in schemes
 
     def test_it_notfound(self):
-        loaders = self._callFUT('development.notfound')
+        loaders = self._callFUT('notfound')
         assert len(loaders) == 0
 
 

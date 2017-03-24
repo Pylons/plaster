@@ -69,66 +69,96 @@ def setup_logging(config_uri, defaults=None):
     return loader.setup_logging(defaults)
 
 
-def get_loader(config_uri):
+def get_loader(config_uri, protocol=None):
     """
     Find a :class:`plaster.ILoader` object capable of handling ``config_uri``.
 
     ``config_uri`` may be anything that can be parsed by
     :func:`plaster.parse_uri`.
 
+    ``protocol`` may be a :term:`loader protocol` that the loader must
+    satisfy to match the desired ``config_uri``.
+
     """
     config_uri = parse_uri(config_uri)
     requested_scheme = config_uri.scheme
 
-    matched_loaders = find_loaders(config_uri)
+    matched_loaders = find_loaders(requested_scheme, protocol=protocol)
 
     if len(matched_loaders) < 1:
-        raise LoaderNotFound(requested_scheme)
+        raise LoaderNotFound(requested_scheme, protocol=protocol)
 
     if len(matched_loaders) > 1:
-        raise MultipleLoadersFound(requested_scheme, matched_loaders)
+        raise MultipleLoadersFound(
+            requested_scheme, matched_loaders, protocol=protocol)
 
     loader_info = matched_loaders[0]
-    loader = loader_info.load()
+    loader = loader_info.load(config_uri)
     return loader
 
 
-def find_loaders(config_uri):
+def find_loaders(scheme=None, protocol=None):
     """
-    Find all loaders which satisfy the ``config_uri`` scheme.
+    Find all loaders that match the ``config_uri`` and ``protocol``.
 
-    ``config_uri`` may be anything that can be parsed by
-    :func:`plaster.parse_uri`.
+    ``scheme`` may be any valid scheme. Examples would be something like
+    ``ini`` or ``ini+pastedeploy``. If ``None`` then loaders matching any
+    scheme will be returned.
+
+    ``protocol`` may be a :term:`loader protocol` that the loader must
+    satisfy to match the desired ``config_uri``. If ``None`` then only
+    non-protocol-specific loaders will be returned.
 
     Returns a list containing zero or more :class:`plaster.ILoaderInfo`
     objects.
 
     """
-    config_uri = parse_uri(config_uri)
-    requested_scheme = config_uri.scheme
-
     matched_loaders = []
-    for loader in pkg_resources.iter_entry_points(group='plaster.loader'):
-        if requested_scheme == loader.name:
+    entry_points = None
+
+    if protocol is None:
+        group = 'plaster.loader_factory'
+    else:
+        group = 'plaster.loader_factory.' + protocol
+
+    parts = scheme.rsplit('+', 1)
+    if len(parts) == 2:
+        try:
+            distro = pkg_resources.get_distribution(parts[1])
+        except pkg_resources.DistributionNotFound:
+            pass
+        else:
+            scheme = parts[0]
+            entry_points = distro.get_entry_map(group).values()
+
+    # only search entry points
+    if entry_points is None:
+        entry_points = pkg_resources.iter_entry_points(group)
+
+    for loader in entry_points:
+        if scheme is None or scheme == loader.name:
             matched_loaders.append(loader)
 
-        elif '+' in loader.name:
-            ext, _ = loader.name.split('+', 1)
-            if ext == requested_scheme:
-                matched_loaders.append(loader)
-
     return [
-        EntryPointLoaderInfo(ep, config_uri)
+        EntryPointLoaderInfo(ep, protocol=protocol)
         for ep in matched_loaders
     ]
 
 
 class EntryPointLoaderInfo(ILoaderInfo):
-    def __init__(self, ep, config_uri):
-        self.scheme = ep.name
-        self.entrypoint = ep
-        self.config_uri = config_uri
+    def __init__(self, ep, protocol=None):
+        self.entry_point = ep
+        self.scheme = '{0}+{1}'.format(ep.name, ep.dist.project_name)
+        self.protocol = protocol
 
-    def load(self):
-        factory = self.entrypoint.load()
-        return factory(self.config_uri)
+        self._factory = None
+
+    @property
+    def factory(self):
+        if self._factory is None:
+            self._factory = self.entry_point.load()
+        return self._factory
+
+    def load(self, config_uri):
+        config_uri = parse_uri(config_uri)
+        return self.factory(config_uri)

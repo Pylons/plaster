@@ -1,0 +1,4 @@
+[plaster.loader_factory]
+dup = app2.loaders:DuplicateLoader
+yaml+bar = app2.loaders:YAMLBarLoader
+

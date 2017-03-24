@@ -37,7 +37,7 @@ class PlasterURL(object):
 
 def parse_uri(config_uri):
     """
-    Return a :class:`.PlasterURL` object parsed from the ``config_uri``.
+    Parse the ``config_uri`` into a :class:`plaster.PlasterURL` object.
 
     ``config_uri`` can be a relative or absolute file path such as
     ``development.ini`` or ``/path/to/development.ini``. The file must have

@@ -10,7 +10,7 @@ class TestNoSectionError(object):
         assert exc.message == 'Could not find requested section "foo".'
 
     def test_it_overrides_message(self):
-        exc = self._makeOne('foo', 'bar')
+        exc = self._makeOne('foo', message='bar')
         assert isinstance(exc, ValueError)
         assert exc.section == 'foo'
         assert exc.message == 'bar'
@@ -28,7 +28,7 @@ class TestInvalidURI(object):
         assert exc.uri == 'foo'
 
     def test_it_overrides_message(self):
-        exc = self._makeOne('foo', 'bar')
+        exc = self._makeOne('foo', message='bar')
         assert isinstance(exc, ValueError)
         assert exc.message == 'bar'
         assert exc.uri == 'foo'
@@ -43,13 +43,24 @@ class TestLoaderNotFound(object):
         exc = self._makeOne('foo')
         assert isinstance(exc, ValueError)
         assert exc.scheme == 'foo'
+        assert exc.protocol is None
         assert exc.message == (
             'Could not find a matching loader for the scheme "foo".')
 
-    def test_it_overrides_message(self):
-        exc = self._makeOne('foo', 'bar')
+    def test_it_with_protocol(self):
+        exc = self._makeOne('foo', 'wsgi')
         assert isinstance(exc, ValueError)
         assert exc.scheme == 'foo'
+        assert exc.protocol == 'wsgi'
+        assert exc.message == (
+            'Could not find a matching loader for the scheme "foo", '
+            'protocol "wsgi".')
+
+    def test_it_overrides_message(self):
+        exc = self._makeOne('foo', message='bar')
+        assert isinstance(exc, ValueError)
+        assert exc.scheme == 'foo'
+        assert exc.protocol is None
         assert exc.message == 'bar'
 
 
@@ -59,26 +70,41 @@ class TestMultipleLoadersFound(object):
         return MultipleLoadersFound(*args, **kwargs)
 
     def test_it(self):
-        dummy1 = DummyLoader('dummy1')
-        dummy2 = DummyLoader('dummy2')
+        dummy1 = DummyLoaderInfo('dummy1')
+        dummy2 = DummyLoaderInfo('dummy2')
         exc = self._makeOne('https', [dummy1, dummy2])
         assert isinstance(exc, ValueError)
         assert exc.message == (
-            'Multiple plaster loaders were found for scheme="https". '
+            'Multiple plaster loaders were found for scheme "https". '
             'Please specify a more specific config_uri. Matched loaders: '
             'dummy1, dummy2')
         assert exc.scheme == 'https'
+        assert exc.protocol is None
+        assert exc.loaders == [dummy1, dummy2]
+
+    def test_it_with_protocol(self):
+        dummy1 = DummyLoaderInfo('dummy1')
+        dummy2 = DummyLoaderInfo('dummy2')
+        exc = self._makeOne('https', [dummy1, dummy2], protocol='wsgi')
+        assert isinstance(exc, ValueError)
+        assert exc.message == (
+            'Multiple plaster loaders were found for scheme "https", '
+            'protocol "wsgi". Please specify a more specific config_uri. '
+            'Matched loaders: dummy1, dummy2')
+        assert exc.scheme == 'https'
+        assert exc.protocol == 'wsgi'
         assert exc.loaders == [dummy1, dummy2]
 
     def test_it_overrides_message(self):
         dummy = object()
-        exc = self._makeOne('https', [dummy], 'foo')
+        exc = self._makeOne('https', [dummy], message='foo')
         assert isinstance(exc, ValueError)
         assert exc.message == 'foo'
         assert exc.scheme == 'https'
+        assert exc.protocol is None
         assert exc.loaders == [dummy]
 
 
-class DummyLoader(object):
+class DummyLoaderInfo(object):
     def __init__(self, scheme):
         self.scheme = scheme

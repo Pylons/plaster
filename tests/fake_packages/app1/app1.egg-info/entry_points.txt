@@ -1,0 +1,15 @@
+[other.loader]
+ini = app1.loaders:WontBeLoaded
+
+[plaster.loader_factory]
+bad = app1.loaders:BadLoader
+broken = app1.loaders.BadLoader
+conf = app1.loaders:ConfLoader
+dup = app1.loaders:DuplicateLoader
+ini = app1.loaders:INILoader
+yaml = app1.loaders:YAMLLoader
+yaml+foo = app1.loaders:YAMLFooLoader
+
+[plaster.loader_factory.wsgi]
+ini = app1.loaders:INIWSGILoader
+
