@@ -11,7 +11,7 @@ class NoSectionError(PlasterError, ValueError):
     :ivar section: The name of the section that does not exist.
 
     """
-    def __init__(self, section, message=None):
+    def __init__(self, section=None, message=None):
         if message is None:
             message = 'Could not find requested section "{0}".'.format(section)
         super(NoSectionError, self).__init__(message)
