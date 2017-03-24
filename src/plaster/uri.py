@@ -1,6 +1,10 @@
+from collections import OrderedDict
 import os.path
 
-from .compat import urlparse
+from .compat import (
+    urlencode,
+    urlparse,
+)
 from .exceptions import InvalidURI
 
 
@@ -15,6 +19,9 @@ class PlasterURL(object):
         This is the entirety of the ``config_uri`` passed to
         :func:`plaster.parse_uri` without the scheme and fragment.
 
+    :ivar options: A dictionary of options parsed from the query string as
+        url-encoded key=value pairs.
+
     :ivar fragment: A loader-specific default section name.
         This parameter may be used by loaders in scenarios where they provide
         APIs that support a default name. For example, a loader that provides
@@ -23,13 +30,16 @@ class PlasterURL(object):
 
     """
 
-    def __init__(self, scheme, path=None, fragment=None):
+    def __init__(self, scheme, path=None, options=None, fragment=None):
         self.scheme = scheme
         self.path = path
+        self.options = options
         self.fragment = fragment
 
     def __str__(self):
         result = '{0.scheme}://{0.path}'.format(self)
+        if self.options:
+            result += '?' + urlencode(self.options)
         if self.fragment:
             result += '#' + self.fragment
         return result
@@ -53,29 +63,32 @@ def parse_uri(config_uri):
     # check if the uri is actually a url
     parts = urlparse.urlparse(config_uri)
 
+    # reconstruct the path without the scheme and fragment
+    path = urlparse.ParseResult(
+        scheme='',
+        netloc=parts.netloc,
+        path=parts.path,
+        params='',
+        query='',
+        fragment='',
+    ).geturl()
+    # strip off leading //
+    if path.startswith('//'):
+        path = path[2:]
+
     if parts.scheme:
         scheme = parts.scheme
-        # reconstruct the path without the scheme and fragment
-        path = urlparse.ParseResult(
-            scheme='',
-            netloc=parts.netloc,
-            path=parts.path,
-            params=parts.params,
-            query=parts.query,
-            fragment='',
-        ).geturl()
-        # strip off leading //
-        if path.startswith('//'):
-            path = path[2:]
-        fragment = parts.fragment if parts.fragment else None
 
     else:
-        path, fragment = config_uri, None
-        if '#' in config_uri:
-            path, fragment = config_uri.split('#', 1)
         scheme = os.path.splitext(path)[1]
         if scheme.startswith('.'):
             scheme = scheme[1:]
+
+    query = parts.query if parts.query else None
+    options = OrderedDict()
+    if query:
+        options.update(urlparse.parse_qsl(query))
+    fragment = parts.fragment if parts.fragment else None
 
     if not scheme:
         raise InvalidURI(config_uri, (
@@ -85,5 +98,6 @@ def parse_uri(config_uri):
     return PlasterURL(
         scheme=scheme,
         path=path,
+        options=options,
         fragment=fragment,
     )

@@ -1,3 +1,4 @@
+import os.path
 import pytest
 
 
@@ -10,30 +11,37 @@ class TestURL(object):
         uri = self._callFUT('development.ini')
         assert uri.scheme == 'ini'
         assert uri.path == 'development.ini'
+        assert uri.options == {}
         assert uri.fragment is None
 
     def test_absolute_path(self):
-        uri = self._callFUT('/path/to/development.ini')
+        path = os.path.abspath('/path/to/development.ini')
+        uri = self._callFUT(path)
         assert uri.scheme == 'ini'
-        assert uri.path == '/path/to/development.ini'
+        assert uri.path == path
+        assert uri.options == {}
         assert uri.fragment is None
 
     def test_absolute_path_with_fragment(self):
-        uri = self._callFUT('/path/to/development.ini#main')
+        path = os.path.abspath('/path/to/development.ini')
+        uri = self._callFUT(path + '?a=b&c=d#main')
         assert uri.scheme == 'ini'
-        assert uri.path == '/path/to/development.ini'
+        assert uri.path == path
+        assert uri.options == {'a': 'b', 'c': 'd'}
         assert uri.fragment == 'main'
 
     def test_url(self):
         uri = self._callFUT('redis://username@password:localhost/foo?a=b#main')
         assert uri.scheme == 'redis'
-        assert uri.path == 'username@password:localhost/foo?a=b'
+        assert uri.path == 'username@password:localhost/foo'
+        assert uri.options == {'a': 'b'}
         assert uri.fragment == 'main'
 
     def test_url_for_file(self):
         uri = self._callFUT('ini+pastedeploy://development.ini')
         assert uri.scheme == 'ini+pastedeploy'
         assert uri.path == 'development.ini'
+        assert uri.options == {}
         assert uri.fragment is None
 
     def test_missing_scheme(self):
@@ -44,6 +52,10 @@ class TestURL(object):
     def test___str__(self):
         uri = self._callFUT('development.ini')
         assert str(uri) == 'ini://development.ini'
+
+    def test___str___with_options(self):
+        uri = self._callFUT('development.ini?a=b&c=d')
+        assert str(uri) == 'ini://development.ini?a=b&c=d'
 
     def test___str___with_fragment(self):
         uri = self._callFUT('development.ini#main')
