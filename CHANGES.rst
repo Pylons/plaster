@@ -1,3 +1,32 @@
+unreleased
+==========
+
+- Lookup now works differently. First "foo+bar" looks for an installed project
+  distribution named "bar" with a loader named "foo". If this fails then it
+  looks for any loader named "foo+bar".
+
+- Rename the loader entry point to ``plaster.loader_factory``.
+
+- Add the concept of protocols to ``plaster.get_loader`` and
+  ``plaster.find_loaders``.
+
+- ``plaster.find_loaders`` now works on just schemes and protocols
+  instead of full ``PlasterURL`` objects and implements the lookup
+  algorithm for finding loader factories.
+
+- Change the ``ILoaderInfo`` interface to avoid being coupled to a
+  particular uri. ``ILoaderInfo.load`` now takes a config_uri
+  parameter.
+
+- Add a ``options`` dictionary to ``PlasterURL`` containing any arguments
+  decoded from the query string. Loaders may use these for whatever they wish
+  but one good option is default values for placeholders in a config file.
+
+- Define the ``IWSGIProtocol`` interface which addons can use to implement
+  a loader that can return full wsgi apps, servers and filters.
+
+- The scheme is now case-insensitive.
+
 0.2 (2016-06-15)
 ================
 
