@@ -15,12 +15,12 @@ unreleased
   algorithm for finding loader factories.
 
 - Change the ``ILoaderInfo`` interface to avoid being coupled to a
-  particular uri. ``ILoaderInfo.load`` now takes a config_uri
+  particular uri. ``ILoaderInfo.load`` now takes a ``config_uri``
   parameter.
 
 - Add a ``options`` dictionary to ``PlasterURL`` containing any arguments
   decoded from the query string. Loaders may use these for whatever they wish
-  but one good option is default values for placeholders in a config file.
+  but one good option is default values in a config file.
 
 - Define the ``IWSGIProtocol`` interface which addons can use to implement
   a loader that can return full wsgi apps, servers and filters.
