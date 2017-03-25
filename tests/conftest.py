@@ -4,7 +4,7 @@ import pkg_resources
 import pytest
 import sys
 
-@pytest.yield_fixture
+@pytest.fixture
 def fake_packages():
     test_dir = os.path.dirname(__file__)
     ws = pkg_resources.WorkingSet()
