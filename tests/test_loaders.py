@@ -1,37 +1,7 @@
-import mock
-import os.path
-import pkg_resources
 import pytest
-import sys
 
-
-@pytest.yield_fixture(scope='session')
-def fake_loaders():
-    test_dir = os.path.dirname(__file__)
-    ws = pkg_resources.WorkingSet()
-    paths = []
-    for name in ('app1', 'app2'):
-        info_dir = os.path.join(test_dir, 'fake_packages', name)
-        ws.add_entry(info_dir)
-        paths.append(info_dir)
-    sys.path.extend(paths)
-    try:
-        with mock.patch.multiple(
-            'pkg_resources',
-            working_set=ws,
-            iter_entry_points=ws.iter_entry_points,
-        ):
-            yield ws
-    finally:
-        for path in paths:
-            sys.path.remove(path)
-
-
+@pytest.mark.usefixtures('fake_packages')
 class Test_get_loader(object):
-    @pytest.fixture(autouse=True)
-    def working_set(self, fake_loaders):
-        self.working_set = fake_loaders
-
     def _callFUT(self, *args, **kwargs):
         from plaster.loaders import get_loader
         return get_loader(*args, **kwargs)
@@ -93,11 +63,8 @@ class Test_get_loader(object):
         assert loader.entry_point_key == 'yaml+bar'
 
 
+@pytest.mark.usefixtures('fake_packages')
 class Test_find_loaders(object):
-    @pytest.fixture(autouse=True)
-    def working_set(self, fake_loaders):
-        self.working_set = fake_loaders
-
     def _callFUT(self, *args, **kwargs):
         from plaster.loaders import find_loaders
         return find_loaders(*args, **kwargs)
@@ -135,11 +102,8 @@ class Test_find_loaders(object):
         assert len(loaders) == 0
 
 
+@pytest.mark.usefixtures('fake_packages')
 class Test_get_sections(object):
-    @pytest.fixture(autouse=True)
-    def working_set(self, fake_loaders):
-        self.working_set = fake_loaders
-
     def _callFUT(self, config_uri):
         from plaster.loaders import get_sections
         return get_sections(config_uri)
@@ -153,11 +117,8 @@ class Test_get_sections(object):
             self._callFUT('development.bad')
 
 
+@pytest.mark.usefixtures('fake_packages')
 class Test_get_settings(object):
-    @pytest.fixture(autouse=True)
-    def working_set(self, fake_loaders):
-        self.working_set = fake_loaders
-
     def _callFUT(self, config_uri, section=None, defaults=None):
         from plaster.loaders import get_settings
         return get_settings(config_uri, section=section, defaults=defaults)
@@ -188,11 +149,8 @@ class Test_get_settings(object):
             self._callFUT('development.bad')
 
 
+@pytest.mark.usefixtures('fake_packages')
 class Test_setup_logging(object):
-    @pytest.fixture(autouse=True)
-    def working_set(self, fake_loaders):
-        self.working_set = fake_loaders
-
     def _makeOne(self, config_uri):
         from plaster.loaders import get_loader
         return get_loader(config_uri)
