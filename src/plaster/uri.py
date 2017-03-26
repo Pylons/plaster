@@ -33,6 +33,8 @@ class PlasterURL(object):
     def __init__(self, scheme, path=None, options=None, fragment=None):
         self.scheme = scheme
         self.path = path
+        if options is None:
+            options = {}
         self.options = options
         self.fragment = fragment
 
