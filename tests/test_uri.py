@@ -12,7 +12,7 @@ class TestURL(object):
         assert uri.scheme == 'ini'
         assert uri.path == 'development.ini'
         assert uri.options == {}
-        assert uri.fragment is None
+        assert uri.fragment == ''
 
     def test_absolute_path(self):
         path = os.path.abspath('/path/to/development.ini')
@@ -20,7 +20,7 @@ class TestURL(object):
         assert uri.scheme == 'ini'
         assert uri.path == path
         assert uri.options == {}
-        assert uri.fragment is None
+        assert uri.fragment == ''
 
     def test_absolute_path_with_fragment(self):
         path = os.path.abspath('/path/to/development.ini')
@@ -42,7 +42,7 @@ class TestURL(object):
         assert uri.scheme == 'ini+pastedeploy'
         assert uri.path == 'development.ini'
         assert uri.options == {}
-        assert uri.fragment is None
+        assert uri.fragment == ''
 
     def test_missing_scheme(self):
         from plaster.exceptions import InvalidURI
@@ -71,3 +71,19 @@ class TestURL(object):
         assert uri.scheme == 'egg'
         assert uri.path == 'myapp'
         assert uri.fragment == 'main'
+
+    def test_only_scheme(self):
+        uri = self._callFUT('egg:')
+        assert uri.scheme == 'egg'
+        assert uri.path == ''
+        assert uri.options == {}
+        assert uri.fragment == ''
+
+
+def test_default_url_values():
+    from plaster.uri import PlasterURL
+    url = PlasterURL('foo')
+    assert url.scheme == 'foo'
+    assert url.path == ''
+    assert url.options == {}
+    assert url.fragment == ''

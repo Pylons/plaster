@@ -17,7 +17,8 @@ class PlasterURL(object):
 
     :ivar path: The loader-specific path string.
         This is the entirety of the ``config_uri`` passed to
-        :func:`plaster.parse_uri` without the scheme and fragment.
+        :func:`plaster.parse_uri` without the scheme, fragment and options.
+        If this value is falsey it is replaced with an empty string.
 
     :ivar options: A dictionary of options parsed from the query string as
         url-encoded key=value pairs.
@@ -27,15 +28,20 @@ class PlasterURL(object):
         APIs that support a default name. For example, a loader that provides
         ``get_wsgi_app`` may use the fragment to determine the name of the
         section containing the WSGI app if none was explicitly defined.
+        If this value is falsey it is replaced with an empty string.
 
     """
 
-    def __init__(self, scheme, path=None, options=None, fragment=None):
+    def __init__(self, scheme, path='', options=None, fragment=''):
         self.scheme = scheme
+        if not path:
+            path = ''
         self.path = path
         if options is None:
             options = {}
         self.options = options
+        if not fragment:
+            fragment = ''
         self.fragment = fragment
 
     def __str__(self):
