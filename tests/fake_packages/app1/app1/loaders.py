@@ -52,6 +52,9 @@ class INIWSGILoader(IWSGIProtocol, LoaderBase):
     def get_wsgi_app(self, name=None, defaults=None):
         return 'wsgi app'
 
+    def get_wsgi_app_settings(self, name=None, defaults=None):
+        return {'a': 'b'}
+
     def get_wsgi_filter(self, name=None, defaults=None):
         return 'wsgi filter'
 
