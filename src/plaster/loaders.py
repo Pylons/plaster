@@ -113,39 +113,38 @@ def find_loaders(scheme=None, protocol=None):
     objects.
 
     """
-    matched_loaders = []
-    entry_points = None
+    matched_entry_points = []
 
     if protocol is None:
         group = 'plaster.loader_factory'
     else:
         group = 'plaster.loader_factory.' + protocol
 
-    parts = scheme.rsplit('+', 1)
-    if len(parts) == 2:
-        try:
-            distro = pkg_resources.get_distribution(parts[1])
-        except pkg_resources.DistributionNotFound:
-            pass
-        else:
-            scheme = parts[0]
-            entry_points = distro.get_entry_map(group).values()
-
-    # match the scheme case-insensitive
     if scheme is not None:
         scheme = scheme.lower()
 
-    # only search entry points
-    if entry_points is None:
-        entry_points = pkg_resources.iter_entry_points(group)
+        parts = scheme.rsplit('+', 1)
+        if len(parts) == 2:
+            try:
+                distro = pkg_resources.get_distribution(parts[1])
+            except pkg_resources.DistributionNotFound:
+                pass
+            else:
+                scheme = parts[0]
+                for ep in distro.get_entry_map(group).values():
+                    if scheme == ep.name.lower():
+                        matched_entry_points.append(ep)
 
-    for loader in entry_points:
-        if scheme is None or scheme == loader.name.lower():
-            matched_loaders.append(loader)
+    # only search entry points for all packages if the scheme is not pointing
+    # at an installed distribution that contains a matching entry point
+    if not matched_entry_points:
+        for ep in pkg_resources.iter_entry_points(group):
+            if scheme is None or scheme == ep.name.lower():
+                matched_entry_points.append(ep)
 
     return [
         EntryPointLoaderInfo(ep, protocol=protocol)
-        for ep in matched_loaders
+        for ep in matched_entry_points
     ]
 
 
