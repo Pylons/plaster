@@ -11,11 +11,13 @@ class ILoader(object):
     It is required to implement ``get_sections``, ``get_settings`` and
     ``setup_logging``.
 
-    Optionally, it may also provide other loader-specific functionality such
-    as ``get_wsgi_app`` and ``get_wsgi_server`` for loading WSGI
-    configurations. Services that depend on such functionality should document
-    the required functionality behind a particular :term:`loader protocol`
-    which custom loaders can implement.
+    Optionally, it may also implement other :term:`loader protocol` interfaces
+    to provide extra functionality. For example,
+    :class:`plaster.protocols.IWSGIProtocol` which requires ``get_wsgi_app``,
+    and ``get_wsgi_server`` for loading WSGI configurations. Services that
+    depend on such functionality should document the required functionality
+    behind a particular :term:`loader protocol` which custom loaders can
+    implement.
 
     :ivar uri: The :class:`plaster.PlasterURL` object used to find the
         :class:`plaster.ILoaderFactory`.
@@ -34,13 +36,19 @@ class ILoader(object):
         """
         Load the settings for the named ``section``.
 
-        If ``section`` is not ``None`` then it will be used. Otherwise, the
-        ``section`` may be populated by the fragment defined in the
-        ``config_uri#fragment`` syntax. If ``section`` is still ``None`` then
-        a :class:`plaster.NoSectionError` error should be raised.
+        :param section: The name of the section in the config file. If this is
+            ``None`` then it is up to the loader to determine a sensible
+            default usually derived from the fragment in the ``path#name``
+            syntax of the ``config_uri``.
 
-        Any values in ``defaults`` may be overridden prior to returning
-        the final configuration dictionary.
+        :param defaults: A ``dict`` of default values used to populate the
+            settings and support variable interpolation. Any values in
+            ``defaults`` may be overridden by the loader prior to returning
+            the final configuration dictionary.
+
+        :returns: A ``dict`` of settings.
+        :raises plaster.NoSectionError: If a section name cannot be determined or
+            a section of the determined name cannot be found.
 
         """
 
@@ -52,6 +60,11 @@ class ILoader(object):
         This function should, at least, configure the Python standard logging
         module. However, it may also be used to configure any other logging
         subsystems that serve a similar purpose.
+
+        :param defaults: A ``dict`` of default values used to populate the
+            settings and support variable interpolation. Any values in
+            ``defaults`` may be overridden by the loader prior to returning
+            the final configuration dictionary.
 
         """
 
@@ -73,7 +86,8 @@ class ILoaderInfo(object):
     An info object describing a specific :class:`plaster.ILoader`.
 
     :ivar scheme: The full scheme of the loader.
-    :ivar protocol: The supported :term:`loader protocol`.
+    :ivar protocols: Zero or more supported :term:`loader protocol`
+        identifiers.
     :ivar factory: The :class:`plaster.ILoaderFactory`.
 
     """
@@ -82,5 +96,8 @@ class ILoaderInfo(object):
     def load(self, config_uri):
         """
         Create and return an :class:`plaster.ILoader` instance.
+
+        :param config_uri: Anything that can be parsed by
+            :func:`plaster.parse_uri`.
 
         """

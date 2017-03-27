@@ -6,10 +6,15 @@ bad = app1.loaders:BadLoader
 broken = app1.loaders.BadLoader
 conf = app1.loaders:ConfLoader
 dup = app1.loaders:DuplicateLoader
-ini = app1.loaders:INILoader
+ini = app1.loaders:INIWSGILoader
 yaml = app1.loaders:YAMLLoader
 yaml+foo = app1.loaders:YAMLFooLoader
 
-[plaster.loader_factory.wsgi]
+[plaster.wsgi_loader_factory]
 ini = app1.loaders:INIWSGILoader
 
+[plaster.dummy1_loader_factory]
+ini = app1.loaders:INIWSGILoader
+
+[plaster.dummy2_loader_factory]
+ini = app1.loaders:INILoader

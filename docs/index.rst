@@ -113,12 +113,12 @@ to find an :class:`plaster.ILoaderFactory`.
     import plaster
 
     config_uri = 'ini+pastedeploy://development.ini#myapp'
-    loader = plaster.get_loader(config_uri, protocol='wsgi')
+    loader = plaster.get_loader(config_uri, protocols=['wsgi'])
     settings = loader.get_settings()
 
 A ``config_uri`` may be a file path or an :rfc:`3986` URI. In the case of a
 file path, the file extension is used as the scheme. In either case the
-scheme and the protocol are the only items that ``plaster`` cares about with
+scheme and the protocols are the only items that ``plaster`` cares about with
 respect to finding an :class:`plaster.ILoaderFactory`.
 
 Writing your own loader
@@ -197,10 +197,12 @@ Supporting a custom protocol
 
 By default, loaders are exposed via the ``plaster.loader_factory`` entry
 point. In order to register a loader that supports a custom protocol it should
-register itself on a ``plaster.loader_factory.<protocol>`` entry point. This
-is an independent loader namespace and in most scenarios an author would
-register the loader for the default namespace as well as the protocol-specific
-one to make it discoverable whether or not the protocol is requested.
+register itself on a ``plaster.<protocol>_loader_factory`` entry point.
+
+A scheme **MUST** point to the same loader factory for every protocol,
+including the default (empty) protocol. If it does not then no compatible
+loader will be found if the end-user requests a loader satisfying both
+protocols.
 
 Acknowledgments
 ===============

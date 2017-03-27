@@ -8,6 +8,10 @@ def test_wsgi_protocol():
                 return [b'hello world']
             return app
 
+        def get_wsgi_app_settings(self, name=None, defaults=None):
+            settings = defaults.copy() if defaults else {}
+            return settings
+
         def get_wsgi_filter(self, name=None, defaults=None):
             def filter(app):
                 def wrapper(environ, start_response):

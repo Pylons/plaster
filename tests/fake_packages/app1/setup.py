@@ -7,15 +7,21 @@ setup(
     entry_points={
         'plaster.loader_factory': [
             'conf=app1.loaders:ConfLoader',
-            'ini=app1.loaders:INILoader',
+            'ini=app1.loaders:INIWSGILoader',
             'yaml=app1.loaders:YAMLLoader',
             'yaml+foo=app1.loaders:YAMLFooLoader',
             'dup=app1.loaders:DuplicateLoader',
             'bad=app1.loaders:BadLoader',
             'broken=app1.loaders.BadLoader',
         ],
-        'plaster.loader_factory.wsgi': [
+        'plaster.wsgi_loader_factory': [
             'ini=app1.loaders:INIWSGILoader',
+        ],
+        'plaster.dummy1_loader_factory': [
+            'ini=app1.loaders:INIWSGILoader',
+        ],
+        'plaster.dummy2_loader_factory': [
+            'ini=app1.loaders:INILoader',
         ],
         'other.loader': [
             'ini=app1.loaders:WontBeLoaded',

@@ -20,10 +20,10 @@ class Test_get_loader(object):
 
     def test_path_with_extension(self):
         loader = self._callFUT('development.ini')
-        assert loader.entry_point_key == 'ini'
+        assert loader.entry_point_key == 'ini+wsgi'
 
     def test_path_with_extension_and_protocol(self):
-        loader = self._callFUT('development.ini', protocol='wsgi')
+        loader = self._callFUT('development.ini', protocols=['wsgi'])
         assert loader.entry_point_key == 'ini+wsgi'
 
     def test_dup(self):
@@ -88,7 +88,7 @@ class Test_find_loaders(object):
         assert len(loaders) == 1
         assert loaders[0].scheme == 'ini+app1'
         loader = loaders[0].load('development.ini')
-        assert loader.entry_point_key == 'ini'
+        assert loader.entry_point_key == 'ini+wsgi'
 
     def test_multiple_yaml_loaders(self):
         loaders = self._callFUT('dup')
@@ -96,6 +96,22 @@ class Test_find_loaders(object):
         schemes = set([l.scheme for l in loaders])
         assert 'dup+app1' in schemes
         assert 'dup+app2' in schemes
+
+    def test_one_protocol(self):
+        loaders = self._callFUT('ini', protocols=['wsgi'])
+        assert len(loaders) == 1
+        loader = loaders[0].load('development.ini')
+        assert loader.entry_point_key == 'ini+wsgi'
+
+    def test_multiple_protocols(self):
+        loaders = self._callFUT('ini', protocols=['wsgi', 'dummy1'])
+        assert len(loaders) == 1
+        loader = loaders[0].load('development.ini')
+        assert loader.entry_point_key == 'ini+wsgi'
+
+    def test_multiple_incompatible_protocols(self):
+        loaders = self._callFUT('ini', protocols=['wsgi', 'dummy2'])
+        assert len(loaders) == 0
 
     def test_it_notfound(self):
         loaders = self._callFUT('notfound')
