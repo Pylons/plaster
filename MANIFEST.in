@@ -11,3 +11,4 @@ include .coveragerc
 include tox.ini appveyor.yml .travis.yml rtd.txt
 
 recursive-exclude * __pycache__ *.py[cod]
+prune docs/_build
