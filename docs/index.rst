@@ -36,7 +36,7 @@ are sourced from so long as they are in a section named ``my-settings``:
 This script can support any config format so long as the application
 (or the user) has installed the loader they expect to use. For example,
 ``pip install plaster_pastedeploy``. The loader is then found by
-``plaster.get_settings`` based on the specific :term:`config uri` provided.
+:func:`plaster.get_settings` based on the specific :term:`config uri` provided.
 
 Protocols
 =========
