@@ -1,5 +1,5 @@
-unreleased
-==========
+0.3 (2017-03-27)
+================
 
 - Lookup now works differently. First "foo+bar" looks for an installed project
   distribution named "bar" with a loader named "foo". If this fails then it
