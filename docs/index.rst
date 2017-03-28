@@ -2,27 +2,21 @@
 plaster
 =======
 
-``plaster`` is a loader interface around arbitrary config file formats. It
-exists to define a common API for applications to use when they wish to load
-configuration settings. The library itself does not aim to handle anything
-except a basic API that applications may use to find and load configuration
-settings. Any specific constraints should be implemented in a pluggable loader
-which can be registered via an entrypoint.
+``plaster`` is a loader interface around arbitrary config file formats. It exists to define a common API for applications to use when they wish to load configuration settings. The library itself does not aim to handle anything except a basic API that applications may use to find and load configuration settings. Any specific constraints should be implemented in a pluggable loader which can be registered via an entrypoint.
 
-The library helps your application find an appropriate loader based on a
-:term:`config uri` and a desired set of :term:`loader protocol` identifiers.
+The library helps your application find an appropriate loader based on a :term:`config uri` and a desired set of :term:`loader protocol` identifiers.
 
 Some possible ``config_uri`` formats:
 
 * ``development.ini``
 * ``development.ini#myapp``
 * ``development.ini?http_port=8080#main``
+* ``ini://development.conf``
 * ``ini+pastedeploy:///path/to/development.ini``
 * ``ini+pastedeploy://development.ini#foo``
 * ``egg:MyApp?debug=false#foo``
 
-An example application that does not care what file format the settings
-are sourced from so long as they are in a section named ``my-settings``:
+An example application that does not care what file format the settings are sourced from, as long as they are in a section named ``my-settings``:
 
 .. code-block:: python
 
@@ -33,27 +27,17 @@ are sourced from so long as they are in a section named ``my-settings``:
         config_uri = sys.argv[1]
         settings = plaster.get_settings(config_uri, 'my-settings')
 
-This script can support any config format so long as the application
-(or the user) has installed the loader they expect to use. For example,
-``pip install plaster_pastedeploy``. The loader is then found by
-:func:`plaster.get_settings` based on the specific :term:`config uri` provided.
+This script can support any config format so long as the application (or the user) has installed the loader they expect to use. For example, ``pip install plaster_pastedeploy``. The loader is then found by :func:`plaster.get_settings` based on the specific :term:`config uri` provided. The application does not need to configure the loaders. They are discovered via `pkg_resources entrypoints <http://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points>`__ and registered for specific schemes.
 
 Protocols
 =========
 
-``plaster`` supports custom loader protocols which loaders may choose to
-implement to provide extra functionality over the basic
-:class:`plaster.ILoader` interface. A :term:`loader protocol` is intentionally
-very loosely defined but it basically boils down to a loader object that
-supports extra methods with agreed-upon signatures. Right now the only
-officially-supported protocol is ``wsgi`` which defines a loader that should
-implement the :class:`plaster.protocols.IWSGIProtocol` interface.
+``plaster`` supports custom loader protocols which loaders may choose to implement to provide extra functionality over the basic :class:`plaster.ILoader` interface. A :term:`loader protocol` is intentionally very loosely defined but it basically boils down to a loader object that supports extra methods with agreed-upon signatures. Right now the only officially-supported protocol is ``wsgi`` which defines a loader that should implement the :class:`plaster.protocols.IWSGIProtocol` interface.
 
 Known Loaders
 =============
 
-* `plaster_pastedeploy <https://github.com/Pylons/plaster_pastedeploy>`__
-  **officially supported**
+* `plaster_pastedeploy <https://github.com/Pylons/plaster_pastedeploy>`__ **officially supported**
 
   File types:
 
@@ -76,8 +60,7 @@ To install plaster, run this command in your terminal:
 
     $ pip install plaster
 
-If you don't have `pip`_ installed, this `Python installation guide`_ can guide
-you through the process.
+If you don't have `pip`_ installed, this `Python installation guide`_ can guide you through the process.
 
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
@@ -106,14 +89,9 @@ Usage
 Loading settings
 ----------------
 
-A goal of ``plaster`` is to allow a configuration source to be used for
-multiple purposes. For example, an INI file is split into separate sections
-which provide settings for separate applications. This works because each
-application can parse the INI file easily and pull out only the section it
-cares about. In order to load settings, use the :func:`plaster.get_settings`.
+A goal of ``plaster`` is to allow a configuration source to be used for multiple purposes. For example, an INI file is split into separate sections which provide settings for separate applications. This works because each application can parse the INI file easily and pull out only the section it cares about. In order to load settings, use the :func:`plaster.get_settings`.
 
-The application may accept a path to a config file, allowing the user to
-specify the name of the section (``myapp``) to be loaded:
+The application may accept a path to a config file, allowing the user to specify the name of the section (``myapp``) to be loaded:
 
 .. code-block:: python
 
@@ -134,9 +112,7 @@ Alternatively, the application may depend on a specifically named section:
 Configuring logging
 -------------------
 
-``plaster`` requires a :term:`loader` to provide a way to configure
-Python's stdlib logging module. In order to utilize this feature, simply
-call :func:`plaster.setup_logging` from your application.
+``plaster`` requires a :term:`loader` to provide a way to configure Python's stdlib logging module. In order to utilize this feature, simply call :func:`plaster.setup_logging` from your application.
 
 .. code-block:: python
 
@@ -148,9 +124,7 @@ call :func:`plaster.setup_logging` from your application.
 Finding a loader
 ----------------
 
-At the heart of ``plaster`` is the ``config_uri`` format. This format is
-basically ``<scheme>://<path>`` with a few variations. The ``scheme`` is used
-to find an :class:`plaster.ILoaderFactory`.
+At the heart of ``plaster`` is the ``config_uri`` format. This format is basically ``<scheme>://<path>`` with a few variations. The ``scheme`` is used to find an :class:`plaster.ILoaderFactory`.
 
 .. code-block:: python
 
@@ -160,16 +134,12 @@ to find an :class:`plaster.ILoaderFactory`.
     loader = plaster.get_loader(config_uri, protocols=['wsgi'])
     settings = loader.get_settings()
 
-A ``config_uri`` may be a file path or an :rfc:`3986` URI. In the case of a
-file path, the file extension is used as the scheme. In either case the
-scheme and the protocols are the only items that ``plaster`` cares about with
-respect to finding an :class:`plaster.ILoaderFactory`.
+A ``config_uri`` may be a file path or an :rfc:`3986` URI. In the case of a file path, the file extension is used as the scheme. In either case the scheme and the protocols are the only items that ``plaster`` cares about with respect to finding an :class:`plaster.ILoaderFactory`.
 
 Writing your own loader
 -----------------------
 
-``plaster`` finds loaders registered for the ``plaster.loader_factory`` entry
-point in your ``setup.py``:
+``plaster`` finds loaders registered for the ``plaster.loader_factory`` entry point in your ``setup.py``:
 
 .. code-block:: python
 
@@ -185,10 +155,7 @@ point in your ``setup.py``:
         },
     )
 
-In this example the importable ``myapp.Loader`` class will be used as
-:class:`plaster.ILoaderFactory` for creating :class:`plaster.ILoader` objects.
-Each loader is passed a :class:`plaster.PlasterURL` instance, the result of
-parsing the ``config_uri`` to determine the scheme and fragment.
+In this example the importable ``myapp.Loader`` class will be used as :class:`plaster.ILoaderFactory` for creating :class:`plaster.ILoader` objects. Each loader is passed a :class:`plaster.PlasterURL` instance, the result of parsing the ``config_uri`` to determine the scheme and fragment.
 
 .. code-block:: python
 
@@ -228,8 +195,7 @@ This loader may then be used:
     settings = plaster.get_settings('dict://', section='myapp')
     assert settings['a'] == 1
 
-It's also possible to lookup the specific loader by suffixing the scheme
-with the name of the package:
+It's also possible to lookup the specific loader by suffixing the scheme with the name of the package:
 
 .. code-block:: python
 
@@ -239,21 +205,14 @@ with the name of the package:
 Supporting a custom protocol
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, loaders are exposed via the ``plaster.loader_factory`` entry
-point. In order to register a loader that supports a custom protocol it should
-register itself on a ``plaster.<protocol>_loader_factory`` entry point.
+By default, loaders are exposed via the ``plaster.loader_factory`` entry point. In order to register a loader that supports a custom protocol it should register itself on a ``plaster.<protocol>_loader_factory`` entry point.
 
-A scheme **MUST** point to the same loader factory for every protocol,
-including the default (empty) protocol. If it does not then no compatible
-loader will be found if the end-user requests a loader satisfying both
-protocols.
+A scheme **MUST** point to the same loader factory for every protocol, including the default (empty) protocol. If it does not then no compatible loader will be found if the end-user requests a loader satisfying both protocols.
 
 Acknowledgments
 ===============
 
-This API is heavily inspired by conversations, contributions, and design put
-forth in https://github.com/inklesspen/montague and
-https://metaclassical.com/announcing-montague-the-new-way-to-configure-python-applications/.
+This API is heavily inspired by conversations, contributions, and design put forth in https://github.com/inklesspen/montague and https://metaclassical.com/announcing-montague-the-new-way-to-configure-python-applications/.
 
 More Information
 ================
