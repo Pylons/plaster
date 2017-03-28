@@ -68,6 +68,13 @@ def parse_uri(config_uri):
     if isinstance(config_uri, PlasterURL):
         return config_uri
 
+    # force absolute paths to look like a uri for more accurate parsing
+    # we throw away the dummy scheme later and parse it from the resolved
+    # path extension
+    isabs = os.path.isabs(config_uri)
+    if isabs:
+        config_uri = 'dummy://' + config_uri
+
     # check if the uri is actually a url
     parts = urlparse.urlparse(config_uri)
 
@@ -84,7 +91,7 @@ def parse_uri(config_uri):
     if path.startswith('//'):
         path = path[2:]
 
-    if parts.scheme:
+    if parts.scheme and not isabs:
         scheme = parts.scheme
 
     else:
