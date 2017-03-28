@@ -28,7 +28,7 @@ setup(
     long_description=readme + '\n\n' + changes,
     author='Michael Merickel',
     author_email='michael@merickel.org',
-    url='https://github.com/mmerickel/plaster',
+    url='https://github.com/Pylons/plaster',
     packages=find_packages('src', exclude=['tests']),
     package_dir={'': 'src'},
     include_package_data=True,

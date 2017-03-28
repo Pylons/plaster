@@ -35,7 +35,7 @@ The sources for plaster can be downloaded from the `Github repo`_.
 
 .. code-block:: console
 
-    $ git clone https://github.com/mmerickel/plaster.git
+    $ git clone https://github.com/Pylons/plaster.git
 
 Once you have a copy of the source, you can install it with:
 
@@ -43,7 +43,7 @@ Once you have a copy of the source, you can install it with:
 
     $ pip install -e .
 
-.. _Github repo: https://github.com/mmerickel/plaster
+.. _Github repo: https://github.com/Pylons/plaster
 
 Protocols
 =========
