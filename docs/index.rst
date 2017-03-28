@@ -9,6 +9,56 @@ except a basic API that applications may use to find and load configuration
 settings. Any specific constraints should be implemented in a pluggable loader
 which can be registered via an entrypoint.
 
+The library helps your application find an appropriate loader based on a
+:term:`config uri` and a desired set of :term:`loader protocol` identifiers.
+
+Some possible ``config_uri`` formats:
+
+* ``development.ini``
+* ``development.ini#myapp``
+* ``development.ini?http_port=8080#main``
+* ``ini+pastedeploy:///path/to/development.ini``
+* ``ini+pastedeploy://development.ini#foo``
+* ``egg:MyApp?debug=false#foo``
+
+An example application that does not care what file format the settings
+are sourced from so long as they are in a section named ``my-settings``:
+
+.. code-block:: python
+
+    import plaster
+    import sys
+
+    if __name__ == '__main__':
+        config_uri = sys.argv[1]
+        settings = plaster.get_settings(config_uri, 'my-settings')
+
+Protocols
+=========
+
+``plaster`` supports custom loader protocols which loaders may choose to
+implement to provide extra functionality over the basic
+:class:`plaster.ILoader` interface. A :term:`loader protocol` is intentionally
+very loosely defined but it basically boils down to a loader object that
+supports extra methods with agreed-upon signatures. Right now the only
+officially-supported protocol is ``wsgi`` which defines a loader that should
+implement the :class:`plaster.protocols.IWSGIProtocol` interface.
+
+Known Loaders
+=============
+
+* `plaster_pastedeploy <https://github.com/Pylons/plaster_pastedeploy>`__
+  **officially supported**
+
+  File types:
+
+  * ``ini``, ``ini+pastedeploy``
+  * ``egg``, ``egg+pastedeploy``
+
+  Protocols:
+
+  * ``wsgi`` - :class:`plaster.protocols.IWSGIProtocol`
+
 Installation
 ============
 
@@ -44,17 +94,6 @@ Once you have a copy of the source, you can install it with:
     $ pip install -e .
 
 .. _Github repo: https://github.com/Pylons/plaster
-
-Protocols
-=========
-
-``plaster`` supports custom loader protocols which loaders may choose to
-implement to provide extra functionality over the basic
-:class:`plaster.ILoader` interface. A :term:`loader protocol` is intentionally
-very loosely defined but it basically boils down to a loader object that
-supports extra methods with agreed-upon signatures. Right now the only
-officially-supported protocol is ``wsgi`` which defines a loader that should
-implement the :class:`plaster.protocols.IWSGIProtocol` interface.
 
 Usage
 =====
