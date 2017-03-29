@@ -1,3 +1,15 @@
+unreleased
+==========
+
+- Removed the ``plaster.NoSectionError`` exception. It's expected that
+  individual loaders should return an empty dictionary of settings in the
+  case that a section cannot be found.
+  See https://github.com/Pylons/plaster/pull/12
+
+- Expect the ``wsgi`` protocol to raise ``LookupError`` exceptions when
+  a named wsgi component cannot be found.
+  See https://github.com/Pylons/plaster/pull/12
+
 0.3 (2017-03-27)
 ================
 

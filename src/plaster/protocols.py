@@ -27,7 +27,7 @@ class IWSGIProtocol(object):
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
 
-        :raises ValueError: If a WSGI application cannot be found by the
+        :raises LookupError: If a WSGI application cannot be found by the
             specified name.
 
         """
@@ -54,7 +54,7 @@ class IWSGIProtocol(object):
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
 
-        :raises ValueError: If a WSGI application cannot be found by the
+        :raises LookupError: If a WSGI application cannot be found by the
             specified name.
 
         """
@@ -84,7 +84,7 @@ class IWSGIProtocol(object):
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
 
-        :raises ValueError: If a WSGI filter cannot be found by the
+        :raises LookupError: If a WSGI filter cannot be found by the
             specified name.
 
         """
@@ -112,7 +112,7 @@ class IWSGIProtocol(object):
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
 
-        :raises ValueError: If a WSGI server cannot be found by the
+        :raises LookupError: If a WSGI server cannot be found by the
             specified name.
 
         """
