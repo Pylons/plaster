@@ -4,21 +4,6 @@ class PlasterError(Exception):
     """
 
 
-class NoSectionError(PlasterError, ValueError):
-    """
-    Raised by a :class:`plaster.ILoader` which cannot find a section.
-
-    :ivar section: The name of the section that does not exist.
-
-    """
-    def __init__(self, section=None, message=None):
-        if message is None:
-            message = 'Could not find requested section "{0}".'.format(section)
-        super(NoSectionError, self).__init__(message)
-        self.message = message
-        self.section = section
-
-
 class InvalidURI(PlasterError, ValueError):
     """
     Raised by :func:`plaster.parse_uri` when failing to parse a ``config_uri``.

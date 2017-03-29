@@ -46,9 +46,10 @@ class ILoader(object):
             ``defaults`` may be overridden by the loader prior to returning
             the final configuration dictionary.
 
-        :returns: A ``dict`` of settings.
-        :raises plaster.NoSectionError: If a section name cannot be determined or
-            a section of the determined name cannot be found.
+        :returns: A ``dict`` of settings. This should return a dictionary
+            object even if the section is missing.
+        :raises ValueError: If a section name is missing and cannot be
+            determined from the ``config_uri``.
 
         """
 

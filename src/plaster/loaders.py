@@ -52,9 +52,8 @@ def get_settings(config_uri, section=None, defaults=None):
         may be overridden by the loader prior to returning the final
         configuration dictionary.
 
-    :returns: A ``dict`` of settings.
-    :raises plaster.NoSectionError: If a section name cannot be determined or
-        a section of the determined name cannot be found.
+    :returns: A ``dict`` of settings. This should return a dictionary object
+        even if no data is available.
 
     """
     loader = get_loader(config_uri)

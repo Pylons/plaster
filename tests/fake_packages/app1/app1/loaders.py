@@ -30,7 +30,7 @@ class LoaderBase(plaster.ILoader):
         try:
             result.update(_SECTIONS[section])
         except KeyError:
-            raise plaster.NoSectionError(section)
+            pass
         return result
 
     def setup_logging(self, defaults=None):

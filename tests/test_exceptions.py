@@ -1,21 +1,3 @@
-class TestNoSectionError(object):
-    def _makeOne(self, *args, **kwargs):
-        from plaster.exceptions import NoSectionError
-        return NoSectionError(*args, **kwargs)
-
-    def test_it(self):
-        exc = self._makeOne('foo')
-        assert isinstance(exc, ValueError)
-        assert exc.section == 'foo'
-        assert exc.message == 'Could not find requested section "foo".'
-
-    def test_it_overrides_message(self):
-        exc = self._makeOne('foo', message='bar')
-        assert isinstance(exc, ValueError)
-        assert exc.section == 'foo'
-        assert exc.message == 'bar'
-
-
 class TestInvalidURI(object):
     def _makeOne(self, *args, **kwargs):
         from plaster.exceptions import InvalidURI
