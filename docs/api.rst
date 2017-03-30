@@ -57,6 +57,3 @@ Exceptions
 
 .. autoexception:: MultipleLoadersFound
     :members:
-
-.. autoexception:: NoSectionError
-    :members:

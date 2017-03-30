@@ -27,6 +27,9 @@ class IWSGIProtocol(object):
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
 
+        :raises LookupError: If a WSGI application cannot be found by the
+            specified name.
+
         """
 
     @abc.abstractmethod
@@ -50,6 +53,9 @@ class IWSGIProtocol(object):
             settings and support variable interpolation. Any values in
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
+
+        :raises LookupError: If a WSGI application cannot be found by the
+            specified name.
 
         """
 
@@ -78,6 +84,9 @@ class IWSGIProtocol(object):
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
 
+        :raises LookupError: If a WSGI filter cannot be found by the
+            specified name.
+
         """
 
     @abc.abstractmethod
@@ -102,5 +111,8 @@ class IWSGIProtocol(object):
             settings and support variable interpolation. Any values in
             ``defaults`` may be overridden by the loader prior to returning the
             final configuration dictionary.
+
+        :raises LookupError: If a WSGI server cannot be found by the
+            specified name.
 
         """

@@ -170,7 +170,7 @@ In this example the importable ``myapp.Loader`` class will be used as :class:`pl
 
         def get_settings(self, section=None, defaults=None):
             # fallback to the fragment from config_uri if no section is given
-            if section is None:
+            if not section:
                 section = self.uri.fragment
             # if section is still none we could fallback to some
             # loader-specific default
@@ -182,8 +182,6 @@ In this example the importable ``myapp.Loader`` class will be used as :class:`pl
                 result.update({'a': 1})
             elif section == 'yourapp':
                 result.update({'b': 1})
-            else:
-                raise plaster.NoSectionError(section)
             return result
 
 This loader may then be used:

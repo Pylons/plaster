@@ -156,9 +156,8 @@ class Test_get_settings(object):
         assert result == {'foo': 'bar', 'baz': 'foo'}
 
     def test_invalid_section(self):
-        from plaster.exceptions import NoSectionError
-        with pytest.raises(NoSectionError):
-            self._callFUT('development.ini', 'c')
+        result = self._callFUT('development.ini', 'c')
+        assert result == {}
 
     def test_it_bad(self):
         with pytest.raises(Exception):

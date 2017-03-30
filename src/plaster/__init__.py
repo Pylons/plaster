@@ -5,7 +5,6 @@ from .exceptions import (
     InvalidURI,
     LoaderNotFound,
     MultipleLoadersFound,
-    NoSectionError,
     PlasterError,
 )
 from .interfaces import (
