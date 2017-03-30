@@ -5,7 +5,7 @@ plaster
 .. image:: https://img.shields.io/pypi/v/plaster.svg
     :target: https://pypi.python.org/pypi/plaster
 
-.. image:: https://img.shields.io/travis/Pylons/plaster.svg
+.. image:: https://img.shields.io/travis/Pylons/plaster/master.svg
     :target: https://travis-ci.org/Pylons/plaster
 
 .. image:: https://readthedocs.org/projects/plaster/badge/?version=latest
