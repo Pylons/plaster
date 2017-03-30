@@ -61,6 +61,10 @@ class TestURL(object):
         uri = self._callFUT('development.ini#main')
         assert str(uri) == 'ini://development.ini#main'
 
+    def test___repr___(self):
+        uri = self._callFUT('development.ini#main')
+        assert repr(uri) == 'PlasterURL(\'ini://development.ini#main\')'
+
     def test_returns_same_instance(self):
         uri1 = self._callFUT('development.ini')
         uri2 = self._callFUT(uri1)

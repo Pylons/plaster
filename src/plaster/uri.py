@@ -52,6 +52,9 @@ class PlasterURL(object):
             result += '#' + self.fragment
         return result
 
+    def __repr__(self):
+        return 'PlasterURL(\'{0}\')'.format(self)
+
 
 def parse_uri(config_uri):
     """
