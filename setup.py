@@ -23,7 +23,7 @@ tests_require = [
 
 setup(
     name='plaster',
-    version='0.3',
+    version='0.4',
     description='A loader interface around multiple config file formats.',
     long_description=readme + '\n\n' + changes,
     author='Michael Merickel',
@@ -42,7 +42,7 @@ setup(
     zip_safe=False,
     keywords='plaster pastedeploy ini config',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',

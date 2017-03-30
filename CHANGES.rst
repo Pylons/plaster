@@ -1,5 +1,5 @@
-unreleased
-==========
+0.4 (2017-03-30)
+================
 
 - Removed the ``plaster.NoSectionError`` exception. It's expected that
   individual loaders should return an empty dictionary of settings in the
