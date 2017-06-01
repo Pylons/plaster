@@ -15,7 +15,7 @@ class Test_get_loader(object):
         assert loader.entry_point_key == 'conf'
 
     def test_scheme_uri_for_pkg(self):
-        loader = self._callFUT('conf+app1://')
+        loader = self._callFUT('app1+conf://')
         assert loader.entry_point_key == 'conf'
 
     def test_path_with_extension(self):
@@ -32,12 +32,12 @@ class Test_get_loader(object):
             self._callFUT('dup://development.ini')
 
     def test_dedup_app1(self):
-        loader = self._callFUT('dup+app1://development.ini')
-        assert loader.entry_point_key == 'dup+app1'
+        loader = self._callFUT('app1+dup://development.ini')
+        assert loader.entry_point_key == 'app1+dup'
 
     def test_dedup_app2(self):
-        loader = self._callFUT('dup+app2://development.ini')
-        assert loader.entry_point_key == 'dup+app2'
+        loader = self._callFUT('app2+dup://development.ini')
+        assert loader.entry_point_key == 'app2+dup'
 
     def test_other_groups(self):
         from plaster.exceptions import LoaderNotFound
@@ -72,21 +72,21 @@ class Test_find_loaders(object):
     def test_simple_uri(self):
         loaders = self._callFUT('conf')
         assert len(loaders) == 1
-        assert loaders[0].scheme == 'conf+app1'
+        assert loaders[0].scheme == 'app1+conf'
         loader = loaders[0].load('development.conf')
         assert loader.entry_point_key == 'conf'
 
     def test_case_insensitive_scheme(self):
         loaders = self._callFUT('CONF')
         assert len(loaders) == 1
-        assert loaders[0].scheme == 'conf+app1'
+        assert loaders[0].scheme == 'app1+conf'
         loader = loaders[0].load('development.conf')
         assert loader.entry_point_key == 'conf'
 
     def test_scheme_specific_uri(self):
         loaders = self._callFUT('ini')
         assert len(loaders) == 1
-        assert loaders[0].scheme == 'ini+app1'
+        assert loaders[0].scheme == 'app1+ini'
         loader = loaders[0].load('development.ini')
         assert loader.entry_point_key == 'ini+wsgi'
 
@@ -94,8 +94,8 @@ class Test_find_loaders(object):
         loaders = self._callFUT('dup')
         assert len(loaders) == 2
         schemes = set([l.scheme for l in loaders])
-        assert 'dup+app1' in schemes
-        assert 'dup+app2' in schemes
+        assert 'app1+dup' in schemes
+        assert 'app2+dup' in schemes
 
     def test_one_protocol(self):
         loaders = self._callFUT('ini', protocols=['wsgi'])

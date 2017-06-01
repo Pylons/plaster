@@ -42,4 +42,4 @@ class YAMLBarLoader(LoaderBase):
 
 
 class DuplicateLoader(LoaderBase):
-    entry_point_key = 'dup+app2'
+    entry_point_key = 'app2+dup'

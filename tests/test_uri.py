@@ -38,8 +38,8 @@ class TestURL(object):
         assert uri.fragment == 'main'
 
     def test_url_for_file(self):
-        uri = self._callFUT('ini+pastedeploy://development.ini')
-        assert uri.scheme == 'ini+pastedeploy'
+        uri = self._callFUT('pastedeploy+ini://development.ini')
+        assert uri.scheme == 'pastedeploy+ini'
         assert uri.path == 'development.ini'
         assert uri.options == {}
         assert uri.fragment == ''

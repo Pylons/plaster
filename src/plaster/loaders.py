@@ -142,14 +142,14 @@ def find_loaders(scheme, protocols=None):
     scheme = scheme.lower()
 
     # if a distribution is specified then it overrides the default search
-    parts = scheme.rsplit('+', 1)
+    parts = scheme.split('+', 1)
     if len(parts) == 2:
         try:
-            distro = pkg_resources.get_distribution(parts[1])
+            distro = pkg_resources.get_distribution(parts[0])
         except pkg_resources.DistributionNotFound:
             pass
         else:
-            ep = _find_ep_in_dist(distro, parts[0], matching_groups)
+            ep = _find_ep_in_dist(distro, parts[1], matching_groups)
 
             # if we got one or more loaders from a specific distribution
             # then they override everything else so we'll just return them
@@ -188,7 +188,7 @@ def _find_ep_in_dist(distro, scheme, groups):
 class EntryPointLoaderInfo(ILoaderInfo):
     def __init__(self, ep, protocols=None):
         self.entry_point = ep
-        self.scheme = '{0}+{1}'.format(ep.name, ep.dist.project_name)
+        self.scheme = '{0}+{1}'.format(ep.dist.project_name, ep.name)
         self.protocols = protocols
 
         self._factory = None
