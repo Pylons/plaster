@@ -102,6 +102,10 @@ def parse_uri(config_uri):
         if scheme.startswith('.'):
             scheme = scheme[1:]
 
+        # tag uris coming from file extension as file+scheme
+        if scheme:
+            scheme = 'file+' + scheme
+
     query = parts.query if parts.query else None
     options = OrderedDict()
     if query:

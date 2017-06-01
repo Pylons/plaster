@@ -46,7 +46,7 @@ class Test_get_loader(object):
 
     def test_bad(self):
         from app1.loaders import BadLoader
-        loader = self._callFUT('development.bad')
+        loader = self._callFUT('bad:development')
         assert isinstance(loader, BadLoader)
 
     def test_it_broken(self):
