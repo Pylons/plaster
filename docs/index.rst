@@ -12,8 +12,8 @@ Some possible ``config_uri`` formats:
 * ``development.ini#myapp``
 * ``development.ini?http_port=8080#main``
 * ``ini://development.conf``
-* ``ini+pastedeploy:///path/to/development.ini``
-* ``ini+pastedeploy://development.ini#foo``
+* ``pastedeploy+ini:///path/to/development.ini``
+* ``pastedeploy+ini://development.ini#foo``
 * ``egg:MyApp?debug=false#foo``
 
 An example application that does not care what file format the settings are sourced from, as long as they are in a section named ``my-settings``:
@@ -41,8 +41,8 @@ Known Loaders
 
   File types:
 
-  * ``ini``, ``ini+pastedeploy``
-  * ``egg``, ``egg+pastedeploy``
+  * ``file+ini``, ``ini``, ``pastedeploy+ini``
+  * ``egg``, ``pastedeploy+egg``
 
   Protocols:
 
@@ -130,11 +130,17 @@ At the heart of ``plaster`` is the ``config_uri`` format. This format is basical
 
     import plaster
 
-    config_uri = 'ini+pastedeploy://development.ini#myapp'
+    config_uri = 'pastedeploy+ini://development.ini#myapp'
     loader = plaster.get_loader(config_uri, protocols=['wsgi'])
     settings = loader.get_settings()
 
 A ``config_uri`` may be a file path or an :rfc:`3986` URI. In the case of a file path, the file extension is used as the scheme. In either case the scheme and the protocols are the only items that ``plaster`` cares about with respect to finding an :class:`plaster.ILoaderFactory`.
+
+It's also possible to lookup the exact loader by prefixing the scheme with the name of the package containing the loader:
+
+.. code-block:: python
+
+    settings = plaster.get_settings('plaster_pastedeploy+ini://')
 
 Writing your own loader
 -----------------------
@@ -156,6 +162,8 @@ Writing your own loader
     )
 
 In this example the importable ``myapp.Loader`` class will be used as :class:`plaster.ILoaderFactory` for creating :class:`plaster.ILoader` objects. Each loader is passed a :class:`plaster.PlasterURL` instance, the result of parsing the ``config_uri`` to determine the scheme and fragment.
+
+If the loader should be found automatically via file extension then it should broadcast support for the special ``file+<extension>`` scheme. For example, to support ``development.ini`` instead of ``myscheme://development.ini`` the loader should be registered for the ``file+ini`` scheme.
 
 .. code-block:: python
 
@@ -193,11 +201,7 @@ This loader may then be used:
     settings = plaster.get_settings('dict://', section='myapp')
     assert settings['a'] == 1
 
-It's also possible to lookup the specific loader by suffixing the scheme with the name of the package:
-
-.. code-block:: python
-
-    settings2 = plaster.get_settings('dict+myapp://', section='myapp')
+    settings2 = plaster.get_settings('myapp+dict://', section='myapp')
     assert settings == settings2
 
 Supporting a custom protocol
