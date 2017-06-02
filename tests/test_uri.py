@@ -9,7 +9,7 @@ class TestURL(object):
 
     def test_relative_path(self):
         uri = self._callFUT('development.ini')
-        assert uri.scheme == 'ini'
+        assert uri.scheme == 'file+ini'
         assert uri.path == 'development.ini'
         assert uri.options == {}
         assert uri.fragment == ''
@@ -17,7 +17,7 @@ class TestURL(object):
     def test_absolute_path(self):
         path = os.path.abspath('/path/to/development.ini')
         uri = self._callFUT(path)
-        assert uri.scheme == 'ini'
+        assert uri.scheme == 'file+ini'
         assert uri.path == path
         assert uri.options == {}
         assert uri.fragment == ''
@@ -25,7 +25,7 @@ class TestURL(object):
     def test_absolute_path_with_fragment(self):
         path = os.path.abspath('/path/to/development.ini')
         uri = self._callFUT(path + '?a=b&c=d#main')
-        assert uri.scheme == 'ini'
+        assert uri.scheme == 'file+ini'
         assert uri.path == path
         assert uri.options == {'a': 'b', 'c': 'd'}
         assert uri.fragment == 'main'
@@ -38,8 +38,8 @@ class TestURL(object):
         assert uri.fragment == 'main'
 
     def test_url_for_file(self):
-        uri = self._callFUT('ini+pastedeploy://development.ini')
-        assert uri.scheme == 'ini+pastedeploy'
+        uri = self._callFUT('pastedeploy+ini://development.ini')
+        assert uri.scheme == 'pastedeploy+ini'
         assert uri.path == 'development.ini'
         assert uri.options == {}
         assert uri.fragment == ''
@@ -51,19 +51,19 @@ class TestURL(object):
 
     def test___str__(self):
         uri = self._callFUT('development.ini')
-        assert str(uri) == 'ini://development.ini'
+        assert str(uri) == 'file+ini://development.ini'
 
     def test___str___with_options(self):
         uri = self._callFUT('development.ini?a=b&c=d')
-        assert str(uri) == 'ini://development.ini?a=b&c=d'
+        assert str(uri) == 'file+ini://development.ini?a=b&c=d'
 
     def test___str___with_fragment(self):
         uri = self._callFUT('development.ini#main')
-        assert str(uri) == 'ini://development.ini#main'
+        assert str(uri) == 'file+ini://development.ini#main'
 
     def test___repr___(self):
         uri = self._callFUT('development.ini#main')
-        assert repr(uri) == 'PlasterURL(\'ini://development.ini#main\')'
+        assert repr(uri) == 'PlasterURL(\'file+ini://development.ini#main\')'
 
     def test_returns_same_instance(self):
         uri1 = self._callFUT('development.ini')

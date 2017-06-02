@@ -71,7 +71,7 @@ class YAMLFooLoader(LoaderBase):
 
 
 class DuplicateLoader(LoaderBase):
-    entry_point_key = 'dup+app1'
+    entry_point_key = 'app1+dup'
 
 
 class BadLoader(object):

@@ -1,20 +1,26 @@
 [other.loader]
 ini = app1.loaders:WontBeLoaded
 
+[plaster.dummy1_loader_factory]
+file+ini = app1.loaders:INIWSGILoader
+ini = app1.loaders:INIWSGILoader
+
+[plaster.dummy2_loader_factory]
+file+ini = app1.loaders:INILoader
+ini = app1.loaders:INILoader
+
 [plaster.loader_factory]
 bad = app1.loaders:BadLoader
 broken = app1.loaders.BadLoader
 conf = app1.loaders:ConfLoader
 dup = app1.loaders:DuplicateLoader
+file+conf = app1.loaders:ConfLoader
+file+ini = app1.loaders:INIWSGILoader
+file+yaml = app1.loaders:YAMLLoader
 ini = app1.loaders:INIWSGILoader
-yaml = app1.loaders:YAMLLoader
 yaml+foo = app1.loaders:YAMLFooLoader
 
 [plaster.wsgi_loader_factory]
+file+ini = app1.loaders:INIWSGILoader
 ini = app1.loaders:INIWSGILoader
 
-[plaster.dummy1_loader_factory]
-ini = app1.loaders:INIWSGILoader
-
-[plaster.dummy2_loader_factory]
-ini = app1.loaders:INILoader
