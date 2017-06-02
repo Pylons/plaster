@@ -1,5 +1,5 @@
-unreleased
-==========
+0.5 (2017-06-02)
+================
 
 - When a scheme is not supplied, ``plaster.parse_uri`` will now autogenerate
   a scheme from the file extension with the format ``file+<ext>`` instead of
