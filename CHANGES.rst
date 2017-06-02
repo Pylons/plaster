@@ -1,3 +1,17 @@
+unreleased
+==========
+
+- When a scheme is not supplied, ``plaster.parse_uri`` will now autogenerate
+  a scheme from the file extension with the format ``file+<ext>`` instead of
+  simply ``<ext>`` (for example, ``file+ini`` instead of ``ini``).
+  See https://github.com/Pylons/plaster/pull/16
+
+- Absolute lookups are now pulled from the start of the scheme instead of
+  the end. This means that if you want to explicitly define the package that
+  the loader is pulled from, use ``package+scheme`` instead of
+  ``scheme+package``.
+  See https://github.com/Pylons/plaster/pull/16
+
 0.4 (2017-03-30)
 ================
 
