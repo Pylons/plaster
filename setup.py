@@ -28,7 +28,7 @@ setup(
     long_description=readme + '\n\n' + changes,
     author='Michael Merickel',
     author_email='pylons-discuss@googlegroups.com',
-    url='http://docs.pylonsproject.org/projects/plaster/en/latest/',
+    url='https://docs.pylonsproject.org/projects/plaster/en/latest/',
     packages=find_packages('src', exclude=['tests']),
     package_dir={'': 'src'},
     include_package_data=True,
