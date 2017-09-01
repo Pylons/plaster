@@ -19,5 +19,5 @@ a basic API that applications may use to find and load configuration settings.
 Any specific constraints should be implemented in a pluggable loader which can
 be registered via an entrypoint.
 
-See http://docs.pylonsproject.org/projects/plaster/en/latest/ or
+See https://docs.pylonsproject.org/projects/plaster/en/latest/ or
 ``docs/index.rst`` in this distribution for detailed documentation.
