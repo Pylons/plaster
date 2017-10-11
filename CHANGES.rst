@@ -1,3 +1,9 @@
+1.0 (2017-10-11)
+================
+
+- Improve the exception message for ``InvalidURI`` to show the ``config_uri``.
+  See https://github.com/Pylons/plaster/pull/17
+
 0.5 (2017-06-02)
 ================
 
