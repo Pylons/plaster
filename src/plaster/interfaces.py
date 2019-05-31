@@ -1,10 +1,7 @@
 import abc
 
-from .compat import add_metaclass
 
-
-@add_metaclass(abc.ABCMeta)
-class ILoader(object):
+class ILoader(metaclass=abc.ABCMeta):
     """
     An abstraction over an source of configuration settings.
 
@@ -70,8 +67,7 @@ class ILoader(object):
         """
 
 
-@add_metaclass(abc.ABCMeta)
-class ILoaderFactory(object):
+class ILoaderFactory(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def __call__(self, uri):
         """
@@ -81,8 +77,7 @@ class ILoaderFactory(object):
         """
 
 
-@add_metaclass(abc.ABCMeta)
-class ILoaderInfo(object):
+class ILoaderInfo(metaclass=abc.ABCMeta):
     """
     An info object describing a specific :class:`plaster.ILoader`.
 
