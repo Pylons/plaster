@@ -1,10 +1,7 @@
 from collections import OrderedDict
 import os.path
 
-from .compat import (
-    urlencode,
-    urlparse,
-)
+from .compat import urlencode, urlparse
 from .exceptions import InvalidURI
 
 
@@ -32,28 +29,28 @@ class PlasterURL(object):
 
     """
 
-    def __init__(self, scheme, path='', options=None, fragment=''):
+    def __init__(self, scheme, path="", options=None, fragment=""):
         self.scheme = scheme
         if not path:
-            path = ''
+            path = ""
         self.path = path
         if options is None:
             options = {}
         self.options = options
         if not fragment:
-            fragment = ''
+            fragment = ""
         self.fragment = fragment
 
     def __str__(self):
-        result = '{0.scheme}://{0.path}'.format(self)
+        result = "{0.scheme}://{0.path}".format(self)
         if self.options:
-            result += '?' + urlencode(self.options)
+            result += "?" + urlencode(self.options)
         if self.fragment:
-            result += '#' + self.fragment
+            result += "#" + self.fragment
         return result
 
     def __repr__(self):
-        return 'PlasterURL(\'{0}\')'.format(self)
+        return "PlasterURL('{0}')".format(self)
 
 
 def parse_uri(config_uri):
@@ -76,22 +73,22 @@ def parse_uri(config_uri):
     # path extension
     isabs = os.path.isabs(config_uri)
     if isabs:
-        config_uri = 'dummy://' + config_uri
+        config_uri = "dummy://" + config_uri
 
     # check if the uri is actually a url
     parts = urlparse.urlparse(config_uri)
 
     # reconstruct the path without the scheme and fragment
     path = urlparse.ParseResult(
-        scheme='',
+        scheme="",
         netloc=parts.netloc,
         path=parts.path,
-        params='',
-        query='',
-        fragment='',
+        params="",
+        query="",
+        fragment="",
     ).geturl()
     # strip off leading //
-    if path.startswith('//'):
+    if path.startswith("//"):
         path = path[2:]
 
     if parts.scheme and not isabs:
@@ -99,12 +96,12 @@ def parse_uri(config_uri):
 
     else:
         scheme = os.path.splitext(path)[1]
-        if scheme.startswith('.'):
+        if scheme.startswith("."):
             scheme = scheme[1:]
 
         # tag uris coming from file extension as file+scheme
         if scheme:
-            scheme = 'file+' + scheme
+            scheme = "file+" + scheme
 
     query = parts.query if parts.query else None
     options = OrderedDict()
@@ -113,13 +110,12 @@ def parse_uri(config_uri):
     fragment = parts.fragment if parts.fragment else None
 
     if not scheme:
-        raise InvalidURI(config_uri, (
-            'Could not determine the loader scheme for the supplied '
-            'config_uri "{0}"'.format(config_uri)))
+        raise InvalidURI(
+            config_uri,
+            (
+                "Could not determine the loader scheme for the supplied "
+                'config_uri "{0}"'.format(config_uri)
+            ),
+        )
 
-    return PlasterURL(
-        scheme=scheme,
-        path=path,
-        options=options,
-        fragment=fragment,
-    )
+    return PlasterURL(scheme=scheme, path=path, options=options, fragment=fragment)

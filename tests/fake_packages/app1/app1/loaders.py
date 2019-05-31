@@ -1,14 +1,7 @@
 import plaster
 from plaster.protocols import IWSGIProtocol
 
-_SECTIONS = {
-    'a': {
-        'foo': 'bar',
-    },
-    'b': {
-        'baz': 'xyz',
-    },
-}
+_SECTIONS = {"a": {"foo": "bar"}, "b": {"baz": "xyz"}}
 
 
 class LoaderBase(plaster.ILoader):
@@ -39,39 +32,39 @@ class LoaderBase(plaster.ILoader):
 
 
 class ConfLoader(LoaderBase):
-    entry_point_key = 'conf'
+    entry_point_key = "conf"
 
 
 class INILoader(LoaderBase):
-    entry_point_key = 'ini'
+    entry_point_key = "ini"
 
 
 class INIWSGILoader(IWSGIProtocol, LoaderBase):
-    entry_point_key = 'ini+wsgi'
+    entry_point_key = "ini+wsgi"
 
     def get_wsgi_app(self, name=None, defaults=None):
-        return 'wsgi app'
+        return "wsgi app"
 
     def get_wsgi_app_settings(self, name=None, defaults=None):
-        return {'a': 'b'}
+        return {"a": "b"}
 
     def get_wsgi_filter(self, name=None, defaults=None):
-        return 'wsgi filter'
+        return "wsgi filter"
 
     def get_wsgi_server(self, name=None, defaults=None):
-        return 'wsgi server'
+        return "wsgi server"
 
 
 class YAMLLoader(LoaderBase):
-    entry_point_key = 'yaml'
+    entry_point_key = "yaml"
 
 
 class YAMLFooLoader(LoaderBase):
-    entry_point_key = 'yaml+foo'
+    entry_point_key = "yaml+foo"
 
 
 class DuplicateLoader(LoaderBase):
-    entry_point_key = 'app1+dup'
+    entry_point_key = "app1+dup"
 
 
 class BadLoader(object):
@@ -80,4 +73,4 @@ class BadLoader(object):
 
 
 class WontBeLoaded(LoaderBase):
-    entry_point_key = 'ini'
+    entry_point_key = "ini"
