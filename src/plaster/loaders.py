@@ -1,4 +1,8 @@
-import pkg_resources
+# TODO: Remove when we support >=Py3.8
+try:
+    from importlib import metadata
+except ImportError:
+    import importlib_metadata as metadata
 
 from .exceptions import LoaderNotFound, MultipleLoadersFound
 from .interfaces import ILoaderInfo
@@ -136,6 +140,7 @@ def find_loaders(scheme, protocols=None):
     """
     # build a list of all required entry points
     matching_groups = ["plaster.loader_factory"]
+
     if protocols:
         matching_groups += [
             "plaster.{0}_loader_factory".format(proto) for proto in protocols
@@ -144,52 +149,61 @@ def find_loaders(scheme, protocols=None):
 
     # if a distribution is specified then it overrides the default search
     parts = scheme.split("+", 1)
+
     if len(parts) == 2:
         try:
-            distro = pkg_resources.get_distribution(parts[0])
-        except pkg_resources.DistributionNotFound:
+            distro = metadata.distribution(parts[0])
+        except metadata.PackageNotFoundError:
             pass
         else:
-            ep = _find_ep_in_dist(distro, parts[1], matching_groups)
+            (dist, ep) = _find_ep_in_dist(distro, parts[1], matching_groups)
 
             # if we got one or more loaders from a specific distribution
             # then they override everything else so we'll just return them
-            if ep:
-                return [EntryPointLoaderInfo(ep, protocols)]
 
-    # find any distributions supporting the default loader protocol
-    possible_entry_points = [
-        ep
-        for ep in pkg_resources.iter_entry_points("plaster.loader_factory")
-        if scheme is None or scheme == ep.name.lower()
+            if ep:
+                return [EntryPointLoaderInfo(dist, ep, protocols)]
+
+    return [
+        EntryPointLoaderInfo(dist, ep, protocols=protocols)
+        for (dist, ep) in _find_ep_in_dists(scheme, matching_groups)
     ]
-    distros = {ep.dist for ep in possible_entry_points}
-    matched_entry_points = list(
+
+
+def _find_ep_in_dists(scheme, groups):
+    return list(
         filter(
             None,
-            [_find_ep_in_dist(distro, scheme, matching_groups) for distro in distros],
+            [
+                _find_ep_in_dist(distribution, scheme, groups)
+                for distribution in metadata.distributions()
+            ],
         )
     )
-    return [
-        EntryPointLoaderInfo(ep, protocols=protocols) for ep in matched_entry_points
+
+
+def _find_ep_in_dist(dist, scheme, groups):
+    entry_points = [
+        entry_point
+        for entry_point in dist.entry_points
+        if entry_point.group in groups
+        and (scheme is None or scheme == entry_point.name.lower())
     ]
 
-
-def _find_ep_in_dist(distro, scheme, groups):
-    # find the scheme's entry point in each group
-    matched_entry_points = list(
-        filter(None, [distro.get_entry_info(group, scheme) for group in groups])
-    )
+    if not entry_points:
+        return None
 
     # verify that the entry point from each group points to the same factory
-    if len({str(ep) for ep in matched_entry_points}) == 1:
-        return matched_entry_points[0]
+    if len({ep.value for ep in entry_points}) == 1:
+        return (dist, entry_points[0])
 
 
 class EntryPointLoaderInfo(ILoaderInfo):
-    def __init__(self, ep, protocols=None):
+    def __init__(self, dist, ep, protocols=None):
         self.entry_point = ep
-        self.scheme = "{0}+{1}".format(ep.dist.project_name, ep.name)
+        self.scheme = "{0}+{1}".format(
+            dist.metadata["name"] if "name" in dist.metadata else "Unknown", ep.name
+        )
         self.protocols = protocols
 
         self._factory = None
@@ -198,8 +212,10 @@ class EntryPointLoaderInfo(ILoaderInfo):
     def factory(self):
         if self._factory is None:
             self._factory = self.entry_point.load()
+
         return self._factory
 
     def load(self, config_uri):
         config_uri = parse_uri(config_uri)
+
         return self.factory(config_uri)

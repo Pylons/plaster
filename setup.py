@@ -9,7 +9,7 @@ def readfile(name):
 readme = readfile("README.rst")
 changes = readfile("CHANGES.rst")
 
-requires = ["setuptools"]  # for pkg_resources
+requires = []
 
 docs_require = ["Sphinx", "pylons-sphinx-themes"]
 
@@ -28,7 +28,11 @@ setup(
     include_package_data=True,
     python_requires=">=3.4",
     install_requires=requires,
-    extras_require={"docs": docs_require, "testing": tests_require},
+    extras_require={
+        "docs": docs_require,
+        "testing": tests_require,
+        ':python_version<"3.8"': ["importlib_metadata"],
+    },
     test_suite="tests",
     zip_safe=False,
     keywords="plaster pastedeploy ini config",
