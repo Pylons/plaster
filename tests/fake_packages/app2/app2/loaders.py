@@ -1,13 +1,6 @@
 import plaster
 
-_SECTIONS = {
-    'a': {
-        'foo': 'bar',
-    },
-    'b': {
-        'baz': 'xyz',
-    },
-}
+_SECTIONS = {"a": {"foo": "bar"}, "b": {"baz": "xyz"}}
 
 
 class LoaderBase(plaster.ILoader):
@@ -38,8 +31,8 @@ class LoaderBase(plaster.ILoader):
 
 
 class YAMLBarLoader(LoaderBase):
-    entry_point_key = 'yaml+bar'
+    entry_point_key = "yaml+bar"
 
 
 class DuplicateLoader(LoaderBase):
-    entry_point_key = 'app2+dup'
+    entry_point_key = "app2+dup"

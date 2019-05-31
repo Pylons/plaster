@@ -11,6 +11,7 @@ class InvalidURI(PlasterError, ValueError):
     :ivar uri: The user-supplied ``config_uri`` string.
 
     """
+
     def __init__(self, uri, message=None):
         if message is None:
             message = 'Unable to parse config_uri "{0}".'.format(uri)
@@ -29,14 +30,13 @@ class LoaderNotFound(PlasterError, ValueError):
         were requested when finding a loader.
 
     """
+
     def __init__(self, scheme, protocols=None, message=None):
         if message is None:
             scheme_msg = 'scheme "{0}"'.format(scheme)
             if protocols is not None:
-                scheme_msg += ', protocol "{0}"'.format(', '.join(protocols))
-            message = (
-                'Could not find a matching loader for the {0}.'
-                .format(scheme_msg))
+                scheme_msg += ', protocol "{0}"'.format(", ".join(protocols))
+            message = "Could not find a matching loader for the {0}.".format(scheme_msg)
         super(LoaderNotFound, self).__init__(message)
         self.message = message
         self.scheme = scheme
@@ -54,17 +54,19 @@ class MultipleLoadersFound(PlasterError, ValueError):
     :ivar loaders: A list of :class:`plaster.ILoaderInfo` objects.
 
     """
+
     def __init__(self, scheme, loaders, protocols=None, message=None):
         if message is None:
             scheme_msg = 'scheme "{0}"'.format(scheme)
             if protocols is not None:
-                scheme_msg += ', protocol "{0}"'.format(', '.join(protocols))
-            loader_list = ', '.join(loader.scheme for loader in sorted(
-                loaders, key=lambda v: v.scheme))
+                scheme_msg += ', protocol "{0}"'.format(", ".join(protocols))
+            loader_list = ", ".join(
+                loader.scheme for loader in sorted(loaders, key=lambda v: v.scheme)
+            )
             message = (
-                'Multiple plaster loaders were found for {0}. '
-                'Please specify a more specific config_uri. '
-                'Matched loaders: {1}'
+                "Multiple plaster loaders were found for {0}. "
+                "Please specify a more specific config_uri. "
+                "Matched loaders: {1}"
             ).format(scheme_msg, loader_list)
         super(MultipleLoadersFound, self).__init__(message)
         self.message = message
