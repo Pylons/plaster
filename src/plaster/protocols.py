@@ -1,10 +1,7 @@
 import abc
 
-from .compat import add_metaclass
 
-
-@add_metaclass(abc.ABCMeta)
-class IWSGIProtocol(object):
+class IWSGIProtocol(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_wsgi_app(self, name=None, defaults=None):
         """

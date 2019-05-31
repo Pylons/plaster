@@ -24,6 +24,7 @@ def get_sections(config_uri):
 
     """
     loader = get_loader(config_uri)
+
     return loader.get_sections()
 
 
@@ -54,6 +55,7 @@ def get_settings(config_uri, section=None, defaults=None):
 
     """
     loader = get_loader(config_uri)
+
     return loader.get_settings(section, defaults)
 
 
@@ -75,6 +77,7 @@ def setup_logging(config_uri, defaults=None):
 
     """
     loader = get_loader(config_uri)
+
     return loader.setup_logging(defaults)
 
 
@@ -112,6 +115,7 @@ def get_loader(config_uri, protocols=None):
 
     loader_info = matched_loaders[0]
     loader = loader_info.load(config_uri)
+
     return loader
 
 

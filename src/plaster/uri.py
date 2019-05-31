@@ -1,11 +1,11 @@
-from collections import OrderedDict
 import os.path
+from collections import OrderedDict
+from urllib import parse
 
-from .compat import urlencode, urlparse
 from .exceptions import InvalidURI
 
 
-class PlasterURL(object):
+class PlasterURL:
     """
     Represents the components of a URL used to locate a
     :class:`plaster.ILoader`.
@@ -31,22 +31,28 @@ class PlasterURL(object):
 
     def __init__(self, scheme, path="", options=None, fragment=""):
         self.scheme = scheme
+
         if not path:
             path = ""
         self.path = path
+
         if options is None:
             options = {}
         self.options = options
+
         if not fragment:
             fragment = ""
         self.fragment = fragment
 
     def __str__(self):
         result = "{0.scheme}://{0.path}".format(self)
+
         if self.options:
-            result += "?" + urlencode(self.options)
+            result += "?" + parse.urlencode(self.options)
+
         if self.fragment:
             result += "#" + self.fragment
+
         return result
 
     def __repr__(self):
@@ -65,6 +71,7 @@ def parse_uri(config_uri):
     Alternatively, ``config_uri`` may be a :rfc:`1738`-style string.
 
     """
+
     if isinstance(config_uri, PlasterURL):
         return config_uri
 
@@ -72,14 +79,15 @@ def parse_uri(config_uri):
     # we throw away the dummy scheme later and parse it from the resolved
     # path extension
     isabs = os.path.isabs(config_uri)
+
     if isabs:
         config_uri = "dummy://" + config_uri
 
     # check if the uri is actually a url
-    parts = urlparse.urlparse(config_uri)
+    parts = parse.urlparse(config_uri)
 
     # reconstruct the path without the scheme and fragment
-    path = urlparse.ParseResult(
+    path = parse.ParseResult(
         scheme="",
         netloc=parts.netloc,
         path=parts.path,
@@ -88,6 +96,7 @@ def parse_uri(config_uri):
         fragment="",
     ).geturl()
     # strip off leading //
+
     if path.startswith("//"):
         path = path[2:]
 
@@ -96,17 +105,20 @@ def parse_uri(config_uri):
 
     else:
         scheme = os.path.splitext(path)[1]
+
         if scheme.startswith("."):
             scheme = scheme[1:]
 
         # tag uris coming from file extension as file+scheme
+
         if scheme:
             scheme = "file+" + scheme
 
     query = parts.query if parts.query else None
     options = OrderedDict()
+
     if query:
-        options.update(urlparse.parse_qsl(query))
+        options.update(parse.parse_qsl(query))
     fragment = parts.fragment if parts.fragment else None
 
     if not scheme:
