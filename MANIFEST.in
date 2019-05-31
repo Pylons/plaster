@@ -8,7 +8,7 @@ include LICENSE.txt
 include CONTRIBUTING.rst
 include CONTRIBUTORS.txt
 
-include .coveragerc
+include .coveragerc .flake8 pyproject.toml
 include tox.ini appveyor.yml .travis.yml rtd.txt
 
 recursive-exclude * __pycache__ *.py[cod]
