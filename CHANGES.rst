@@ -5,6 +5,9 @@ unreleased
 
 - Add support for Python 3.8, 3.9, 3.10.
 
+- Drop runtime dependency on setuptools / pkg_resources by switching to
+  ``importlib.metadata``.
+
 1.0 (2017-10-11)
 ================
 

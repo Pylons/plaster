@@ -1,7 +1,6 @@
-# TODO: Remove when we support >=Py3.8
 try:
     from importlib import metadata
-except ImportError:
+except ImportError:  # pragma: no cover < py38
     import importlib_metadata as metadata
 
 from .exceptions import LoaderNotFound, MultipleLoadersFound
