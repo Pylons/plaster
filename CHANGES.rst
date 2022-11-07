@@ -1,3 +1,10 @@
+unreleased
+==========
+
+- Drop support for Python 3.4, 3.5, 3.6.
+
+- Add support for Python 3.8, 3.9, 3.10.
+
 1.0 (2017-10-11)
 ================
 
