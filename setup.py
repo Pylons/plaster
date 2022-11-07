@@ -20,6 +20,7 @@ setup(
     version="1.0",
     description="A loader interface around multiple config file formats.",
     long_description=readme + "\n\n" + changes,
+    long_description_content_type="text/x-rst",
     author="Michael Merickel",
     author_email="pylons-discuss@googlegroups.com",
     url="https://docs.pylonsproject.org/projects/plaster/en/latest/",
