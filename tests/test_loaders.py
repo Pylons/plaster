@@ -100,7 +100,7 @@ class Test_find_loaders(object):
     def test_multiple_yaml_loaders(self):
         loaders = self._callFUT("dup")
         assert len(loaders) == 2
-        schemes = set([l.scheme for l in loaders])
+        schemes = {loader.scheme for loader in loaders}
         assert "app1+dup" in schemes
         assert "app2+dup" in schemes
 

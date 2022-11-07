@@ -9,7 +9,7 @@ include LICENSE.txt
 include CONTRIBUTING.rst
 include CONTRIBUTORS.txt
 
-include .coveragerc .flake8 pyproject.toml
+include .coveragerc .flake8 pyproject.toml pytest.ini
 include tox.ini rtd.txt
 
 recursive-exclude * __pycache__ *.py[cod]

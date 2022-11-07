@@ -13,9 +13,10 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
+from datetime import datetime
+import importlib.metadata
 import os
-import pkg_resources
+import sys
 
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
@@ -57,15 +58,15 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"plaster"
-copyright = u"2016, Michael Merickel"
+project = "plaster"
+copyright = f"{datetime.utcnow().year}, Michael Merickel"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
 # the built documents.
 #
 # The short X.Y version.
-version = pkg_resources.get_distribution("plaster").version
+version = importlib.metadata.distribution("plaster").version
 # The full version, including alpha/beta/rc tags.
 release = version
 
