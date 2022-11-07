@@ -1,5 +1,5 @@
-import os.path
 from collections import OrderedDict
+import os.path
 from urllib import parse
 
 from .exceptions import InvalidURI

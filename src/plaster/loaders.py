@@ -142,9 +142,7 @@ def find_loaders(scheme, protocols=None):
     matching_groups = ["plaster.loader_factory"]
 
     if protocols:
-        matching_groups += [
-            f"plaster.{proto}_loader_factory" for proto in protocols
-        ]
+        matching_groups += [f"plaster.{proto}_loader_factory" for proto in protocols]
     scheme = scheme.lower()
 
     # if a distribution is specified then it overrides the default search
