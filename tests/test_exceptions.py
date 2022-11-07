@@ -1,4 +1,4 @@
-class TestInvalidURI(object):
+class TestInvalidURI:
     def _makeOne(self, *args, **kwargs):
         from plaster.exceptions import InvalidURI
 
@@ -17,7 +17,7 @@ class TestInvalidURI(object):
         assert exc.uri == "foo"
 
 
-class TestLoaderNotFound(object):
+class TestLoaderNotFound:
     def _makeOne(self, *args, **kwargs):
         from plaster.exceptions import LoaderNotFound
 
@@ -57,7 +57,7 @@ class TestLoaderNotFound(object):
         assert exc.message == "bar"
 
 
-class TestMultipleLoadersFound(object):
+class TestMultipleLoadersFound:
     def _makeOne(self, *args, **kwargs):
         from plaster.exceptions import MultipleLoadersFound
 
@@ -115,6 +115,6 @@ class TestMultipleLoadersFound(object):
         assert exc.loaders == [dummy]
 
 
-class DummyLoaderInfo(object):
+class DummyLoaderInfo:
     def __init__(self, scheme):
         self.scheme = scheme

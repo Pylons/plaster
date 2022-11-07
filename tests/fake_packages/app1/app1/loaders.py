@@ -67,7 +67,7 @@ class DuplicateLoader(LoaderBase):
     entry_point_key = "app1+dup"
 
 
-class BadLoader(object):
+class BadLoader:
     def __init__(self, uri):
         self.uri = uri
 

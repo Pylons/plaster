@@ -5,8 +5,9 @@ plaster
 .. image:: https://img.shields.io/pypi/v/plaster.svg
     :target: https://pypi.python.org/pypi/plaster
 
-.. image:: https://img.shields.io/travis/Pylons/plaster/master.svg
-    :target: https://travis-ci.org/Pylons/plaster
+.. image:: https://github.com/Pylons/plaster/workflows/Build%20and%20test/badge.svg?branch=master
+        :target: https://github.com/Pylons/plaster/actions?query=workflow%3A%22Build+and+test%22
+        :alt: master CI Status
 
 .. image:: https://readthedocs.org/projects/plaster/badge/?version=latest
     :target: https://readthedocs.org/projects/plaster/?badge=latest

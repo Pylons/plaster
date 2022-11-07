@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.usefixtures("fake_packages")
-class Test_get_loader(object):
+class Test_get_loader:
     def _callFUT(self, *args, **kwargs):
         from plaster.loaders import get_loader
 
@@ -70,7 +70,7 @@ class Test_get_loader(object):
 
 
 @pytest.mark.usefixtures("fake_packages")
-class Test_find_loaders(object):
+class Test_find_loaders:
     def _callFUT(self, *args, **kwargs):
         from plaster.loaders import find_loaders
 
@@ -126,7 +126,7 @@ class Test_find_loaders(object):
 
 
 @pytest.mark.usefixtures("fake_packages")
-class Test_get_sections(object):
+class Test_get_sections:
     def _callFUT(self, config_uri):
         from plaster.loaders import get_sections
 
@@ -134,7 +134,7 @@ class Test_get_sections(object):
 
     def test_it(self):
         result = self._callFUT("development.ini")
-        assert set(result) == set(["a", "b"])
+        assert set(result) == {"a", "b"}
 
     def test_it_bad(self):
         with pytest.raises(Exception):
@@ -142,7 +142,7 @@ class Test_get_sections(object):
 
 
 @pytest.mark.usefixtures("fake_packages")
-class Test_get_settings(object):
+class Test_get_settings:
     def _callFUT(self, config_uri, section=None, defaults=None):
         from plaster.loaders import get_settings
 
@@ -174,7 +174,7 @@ class Test_get_settings(object):
 
 
 @pytest.mark.usefixtures("fake_packages")
-class Test_setup_logging(object):
+class Test_setup_logging:
     def _makeOne(self, config_uri):
         from plaster.loaders import get_loader
 

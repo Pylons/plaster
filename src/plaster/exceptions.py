@@ -14,8 +14,8 @@ class InvalidURI(PlasterError, ValueError):
 
     def __init__(self, uri, message=None):
         if message is None:
-            message = 'Unable to parse config_uri "{0}".'.format(uri)
-        super(InvalidURI, self).__init__(message)
+            message = f'Unable to parse config_uri "{uri}".'
+        super().__init__(message)
         self.message = message
         self.uri = uri
 
@@ -33,11 +33,11 @@ class LoaderNotFound(PlasterError, ValueError):
 
     def __init__(self, scheme, protocols=None, message=None):
         if message is None:
-            scheme_msg = 'scheme "{0}"'.format(scheme)
+            scheme_msg = f'scheme "{scheme}"'
             if protocols is not None:
-                scheme_msg += ', protocol "{0}"'.format(", ".join(protocols))
-            message = "Could not find a matching loader for the {0}.".format(scheme_msg)
-        super(LoaderNotFound, self).__init__(message)
+                scheme_msg += ', protocol "{}"'.format(", ".join(protocols))
+            message = f"Could not find a matching loader for the {scheme_msg}."
+        super().__init__(message)
         self.message = message
         self.scheme = scheme
         self.protocols = protocols
@@ -57,18 +57,18 @@ class MultipleLoadersFound(PlasterError, ValueError):
 
     def __init__(self, scheme, loaders, protocols=None, message=None):
         if message is None:
-            scheme_msg = 'scheme "{0}"'.format(scheme)
+            scheme_msg = f'scheme "{scheme}"'
             if protocols is not None:
-                scheme_msg += ', protocol "{0}"'.format(", ".join(protocols))
+                scheme_msg += ', protocol "{}"'.format(", ".join(protocols))
             loader_list = ", ".join(
                 loader.scheme for loader in sorted(loaders, key=lambda v: v.scheme)
             )
             message = (
-                "Multiple plaster loaders were found for {0}. "
+                "Multiple plaster loaders were found for {}. "
                 "Please specify a more specific config_uri. "
-                "Matched loaders: {1}"
+                "Matched loaders: {}"
             ).format(scheme_msg, loader_list)
-        super(MultipleLoadersFound, self).__init__(message)
+        super().__init__(message)
         self.message = message
         self.scheme = scheme
         self.protocols = protocols
