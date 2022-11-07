@@ -143,7 +143,7 @@ def find_loaders(scheme, protocols=None):
 
     if protocols:
         matching_groups += [
-            "plaster.{0}_loader_factory".format(proto) for proto in protocols
+            f"plaster.{proto}_loader_factory" for proto in protocols
         ]
     scheme = scheme.lower()
 
@@ -201,7 +201,7 @@ def _find_ep_in_dist(dist, scheme, groups):
 class EntryPointLoaderInfo(ILoaderInfo):
     def __init__(self, dist, ep, protocols=None):
         self.entry_point = ep
-        self.scheme = "{0}+{1}".format(
+        self.scheme = "{}+{}".format(
             dist.metadata["name"] if "name" in dist.metadata else "Unknown", ep.name
         )
         self.protocols = protocols

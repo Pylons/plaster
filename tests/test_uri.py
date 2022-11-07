@@ -2,7 +2,7 @@ import os.path
 import pytest
 
 
-class TestURL(object):
+class TestURL:
     def _callFUT(self, uri):
         from plaster.uri import parse_uri
 

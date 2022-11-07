@@ -56,7 +56,7 @@ class PlasterURL:
         return result
 
     def __repr__(self):
-        return "PlasterURL('{0}')".format(self)
+        return f"PlasterURL('{self}')"
 
 
 def parse_uri(config_uri):
@@ -126,7 +126,7 @@ def parse_uri(config_uri):
             config_uri,
             (
                 "Could not determine the loader scheme for the supplied "
-                'config_uri "{0}"'.format(config_uri)
+                'config_uri "{}"'.format(config_uri)
             ),
         )
 
