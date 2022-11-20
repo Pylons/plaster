@@ -163,20 +163,28 @@ def find_loaders(scheme, protocols=None):
 
     return [
         EntryPointLoaderInfo(dist, ep, protocols=protocols)
-        for (dist, ep) in _find_ep_in_dists(scheme, matching_groups)
+        for (dist, ep) in _iter_ep_in_dists(scheme, matching_groups)
     ]
 
 
-def _find_ep_in_dists(scheme, groups):
-    return list(
-        filter(
-            None,
-            [
-                _find_ep_in_dist(distribution, scheme, groups)
-                for distribution in metadata.distributions()
-            ],
-        )
-    )
+def _iter_ep_in_dists(scheme, groups):
+    # XXX this is a hack to deduplicate distributions because importlib.metadata
+    # does not do this for us by default, at least up to Python 3.11.
+    # Specifically, if ``lib`` is symlinked to ``lib64`` then a Distribution
+    # object will be returned for each path, causing duplicate entry points
+    # to be found.
+    #
+    # See https://github.com/Pylons/plaster/issues/25
+    dups = set()
+    for dist in metadata.distributions():
+        name = dist.metadata["Name"]
+        if name in dups:  # pragma: no cover
+            continue
+        dups.add(name)
+
+        result = _find_ep_in_dist(dist, scheme, groups)
+        if result:
+            yield result
 
 
 def _find_ep_in_dist(dist, scheme, groups):
