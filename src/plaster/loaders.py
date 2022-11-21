@@ -127,7 +127,7 @@ def find_loaders(scheme, protocols=None):
     Find all loaders that match the requested scheme and protocols.
 
     :param scheme: Any valid scheme. Examples would be something like ``ini``
-        or ``ini+pastedeploy``.
+        or ``pastedeploy+ini``.
 
     :param protocols: Zero or more :term:`loader protocol` identifiers that
         the loader must implement. If ``None`` then only generic loaders will
@@ -149,11 +149,11 @@ def find_loaders(scheme, protocols=None):
 
     if len(parts) == 2:
         try:
-            distro = metadata.distribution(parts[0])
+            dist = metadata.distribution(parts[0])
         except metadata.PackageNotFoundError:
             pass
         else:
-            (dist, ep) = _find_ep_in_dist(distro, parts[1], matching_groups)
+            ep = _find_ep_in_dist(dist, parts[1], matching_groups)
 
             # if we got one or more loaders from a specific distribution
             # then they override everything else so we'll just return them
@@ -182,9 +182,9 @@ def _iter_ep_in_dists(scheme, groups):
             continue
         dups.add(name)
 
-        result = _find_ep_in_dist(dist, scheme, groups)
-        if result:
-            yield result
+        ep = _find_ep_in_dist(dist, scheme, groups)
+        if ep:
+            yield (dist, ep)
 
 
 def _find_ep_in_dist(dist, scheme, groups):
@@ -195,12 +195,9 @@ def _find_ep_in_dist(dist, scheme, groups):
         and (scheme is None or scheme == entry_point.name.lower())
     ]
 
-    if not entry_points:
-        return None
-
     # verify that the entry point from each group points to the same factory
     if len({ep.value for ep in entry_points}) == 1:
-        return (dist, entry_points[0])
+        return entry_points[0]
 
 
 class EntryPointLoaderInfo(ILoaderInfo):
