@@ -1,3 +1,14 @@
+1.1.1 (2022-11-20)
+==================
+
+- Add support for Python 3.11.
+
+- Fix an bug introduced in 1.1 on some systems where
+  ``plaster.exceptions.MultipleLoadersFound`` would be raised due to
+  ``lib`` and ``lib64`` being symlinked to each other and both added to the
+  ``sys.path``.
+  See https://github.com/Pylons/plaster/pull/27
+
 1.1 (2022-10-06)
 ================
 
