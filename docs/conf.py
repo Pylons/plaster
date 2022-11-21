@@ -14,9 +14,13 @@
 # serve to show the default.
 
 from datetime import datetime
-import pkg_resources
 import os
 import sys
+
+try:
+    import importlib.metadata as importlib_metadata
+except ImportError:
+    import importlib_metadata
 
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
@@ -66,7 +70,7 @@ copyright = f"{datetime.utcnow().year}, Michael Merickel"
 # the built documents.
 #
 # The short X.Y version.
-version = pkg_resources.get_distribution("plaster").version
+version = importlib_metadata.distribution("plaster").version
 # The full version, including alpha/beta/rc tags.
 release = version
 
