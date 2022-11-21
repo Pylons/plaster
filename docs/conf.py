@@ -14,7 +14,7 @@
 # serve to show the default.
 
 from datetime import datetime
-import importlib.metadata
+import pkg_resources
 import os
 import sys
 
@@ -66,7 +66,7 @@ copyright = f"{datetime.utcnow().year}, Michael Merickel"
 # the built documents.
 #
 # The short X.Y version.
-version = importlib.metadata.distribution("plaster").version
+version = pkg_resources.get_distribution("pyramid").version
 # The full version, including alpha/beta/rc tags.
 release = version
 
