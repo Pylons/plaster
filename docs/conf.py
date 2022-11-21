@@ -66,7 +66,7 @@ copyright = f"{datetime.utcnow().year}, Michael Merickel"
 # the built documents.
 #
 # The short X.Y version.
-version = pkg_resources.get_distribution("pyramid").version
+version = pkg_resources.get_distribution("plaster").version
 # The full version, including alpha/beta/rc tags.
 release = version
 
