@@ -1,3 +1,11 @@
+1.1.2 (2022-11-20)
+==================
+
+- Fix a bug in which plaster would crash harder than expected if a URI
+  is specified to a distribution that does not have the specified entry points.
+  Now a LoaderNotFound exception will be raised instead of a bad unpacking
+  of tuples.
+
 1.1.1 (2022-11-20)
 ==================
 

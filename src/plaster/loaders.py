@@ -157,7 +157,6 @@ def find_loaders(scheme, protocols=None):
 
             # if we got one or more loaders from a specific distribution
             # then they override everything else so we'll just return them
-
             if ep:
                 return [EntryPointLoaderInfo(dist, ep, protocols)]
 
