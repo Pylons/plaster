@@ -55,7 +55,7 @@ class Test_get_loader:
         assert isinstance(loader, BadLoader)
 
     def test_it_broken(self):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception, match=r"file\+broken"):
             self._callFUT("development.broken")
 
     def test_it_notfound(self):
@@ -137,7 +137,7 @@ class Test_get_sections:
         assert set(result) == {"a", "b"}
 
     def test_it_bad(self):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception, match=r"file\+bad"):
             self._callFUT("development.bad")
 
 
@@ -169,7 +169,7 @@ class Test_get_settings:
         assert result == {}
 
     def test_it_bad(self):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception, match=r"file\+bad"):
             self._callFUT("development.bad")
 
 
@@ -195,5 +195,5 @@ class Test_setup_logging:
         self._callFUT("development.ini#a")
 
     def test_it_bad(self):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception, match="BadLoader"):
             self._callFUT("bad://development.ini")
