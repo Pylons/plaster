@@ -130,4 +130,6 @@ def parse_uri(config_uri):
             ),
         )
 
-    return PlasterURL(scheme=scheme, path=path, options=options, fragment=fragment)
+    return PlasterURL(
+        scheme=scheme, path=path, options=options, fragment=fragment
+    )

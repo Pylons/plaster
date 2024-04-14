@@ -61,7 +61,8 @@ class MultipleLoadersFound(PlasterError, ValueError):
             if protocols is not None:
                 scheme_msg += ', protocol "{}"'.format(", ".join(protocols))
             loader_list = ", ".join(
-                loader.scheme for loader in sorted(loaders, key=lambda v: v.scheme)
+                loader.scheme
+                for loader in sorted(loaders, key=lambda v: v.scheme)
             )
             message = (
                 "Multiple plaster loaders were found for {}. "

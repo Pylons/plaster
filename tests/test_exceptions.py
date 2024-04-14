@@ -28,7 +28,9 @@ class TestLoaderNotFound:
         assert isinstance(exc, ValueError)
         assert exc.scheme == "foo"
         assert exc.protocols is None
-        assert exc.message == ('Could not find a matching loader for the scheme "foo".')
+        assert exc.message == (
+            'Could not find a matching loader for the scheme "foo".'
+        )
 
     def test_it_with_protocol(self):
         exc = self._makeOne("foo", ["wsgi"])
@@ -36,7 +38,8 @@ class TestLoaderNotFound:
         assert exc.scheme == "foo"
         assert exc.protocols == ["wsgi"]
         assert exc.message == (
-            'Could not find a matching loader for the scheme "foo", ' 'protocol "wsgi".'
+            'Could not find a matching loader for the scheme "foo", '
+            'protocol "wsgi".'
         )
 
     def test_it_with_multiple_protocols(self):
@@ -94,7 +97,9 @@ class TestMultipleLoadersFound:
     def test_it_with_multiple_protocols(self):
         dummy1 = DummyLoaderInfo("dummy1")
         dummy2 = DummyLoaderInfo("dummy2")
-        exc = self._makeOne("https", [dummy1, dummy2], protocols=["wsgi", "qt"])
+        exc = self._makeOne(
+            "https", [dummy1, dummy2], protocols=["wsgi", "qt"]
+        )
         assert isinstance(exc, ValueError)
         assert exc.message == (
             'Multiple plaster loaders were found for scheme "https", '
