@@ -176,7 +176,10 @@ def _iter_ep_in_dists(scheme, groups):
     # See https://github.com/Pylons/plaster/issues/25
     dups = set()
     for dist in metadata.distributions():
-        name = dist.metadata["Name"]
+        try:
+            name = dist.metadata["Name"]
+        except FileNotFoundError:
+            continue
         if name in dups:  # pragma: no cover
             continue
         dups.add(name)
