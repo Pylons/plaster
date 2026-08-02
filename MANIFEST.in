@@ -9,6 +9,7 @@ include LICENSE.txt
 include CONTRIBUTING.rst
 include CONTRIBUTORS.txt
 
+include .mailmap
 include .coveragerc .flake8 pyproject.toml pytest.ini
 include tox.ini rtd.txt
 
